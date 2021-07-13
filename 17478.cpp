@@ -1,102 +1,43 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
 using namespace std;
+int n;
 
-int N,M,B;
-int map[501][501];
-vector<int> v;
+void print(int num) {
+    for(int i = 0; i < num*4; i++) cout << "_";
+}
 
-int T = 99999999;
-int H = 99999999;
+void recur(int num) {
 
-// 높이를 num 으로 통일시켜본다
-void Calculate(int num)
-{
-    int removed = 0;
-    int added = 0;
+    print(num);
+    cout << "\"재귀함수가 뭔가요?\"" << '\n';
 
-    for(int i = 0; i < N; i++)
-    {
-        for(int j = 0; j < M; j++)
-        {
-            // 크기가 num보다 낮다면
-            if(map[i][j] < num)
-            {
-                // 블록을 쌓아야함
-                added += num - map[i][j];
-            }
-                // 크기가 num보다 높다면
-            else if(map[i][j] > num)
-            {
-                // 블록을 제거해야함
-                removed += map[i][j] - num;
-            }
-        }
-    }
-
-    // 작업 후 인벤토리에 남아 있는 블록의 수
-    int remain = B + removed - added;
-    // 인벤토리에 남아있는 블록의수가 0보다 작아진다면 높이를 num으로 통일하는 작업은 불가능하다
-    if(remain < 0)
-    {
+    if(num == n) {
+        print(num);
+        cout << "\"재귀함수는 자기 자신을 호출하는 함수라네\"" << '\n';
+        print(num);
+        cout << "라고 답변하였지.";
+        cout << '\n';
         return;
     }
 
-    // 위 조건을 통과했다면 작업이 가능한 경우
-    int time = 2 * removed + added;
+    print(num);
+    cout << "\"잘 들어보게. 옛날옛날 한 산 꼭대기에 이세상 모든 지식을 통달한 선인이 있었어." << '\n';
+    print(num);
+    cout << "마을 사람들은 모두 그 선인에게 수많은 질문을 했고, 모두 지혜롭게 대답해 주었지." << '\n';
+    print(num);
+    cout << "그의 답은 대부분 옳았다고 하네. 그런데 어느 날, 그 선인에게 한 선비가 찾아와서 물었어.\"" << '\n';
 
-    if(time < T)
-    {
-        T = time;
-        H = num;
-    }
-    // 같은 시간이 걸릴때
-    if(time == T)
-    {
-        // 현재 높이가 더 높으면
-        if(num > H)
-        {
-            T = time;
-            H = num;
-        }
-    }
+    recur(num+1);
+
+    print(num);
+    cout << "라고 답변하였지.";
+    if(num != 0) cout << '\n';
+
+
 }
 
-int main()
-{
-    cin >> N >> M >> B;
-    for(int i = 0; i < N; i++)
-    {
-        for(int j = 0; j < M; j++)
-        {
-            cin >> map[i][j];
-            // 벡터 v에는 중복되지 않는 숫자들이 들어가게됨
-            bool overlap = false;
-            for(int x : v)
-            {
-                if(x == map[i][j])
-                {
-                    overlap = true;
-                    break;
-                }
-            }
-            if(!overlap)
-                v.push_back(map[i][j]);
-        }
-    }
-
-    int origin_B = B;
-    // 정렬
-    sort(v.begin(), v.end());
-
-    // 가장 작은 높이에서부터 가장 높은 높이까지 계산
-    for(int i = v[0]; i <= v[v.size()-1]; i++)
-    {
-        B = origin_B;
-        Calculate(i);
-    }
-
-
-    cout << T << ' ' << H;
+int main() {
+    cin >> n;
+    cout << "어느 한 컴퓨터공학과 학생이 유명한 교수님을 찾아가 물었다." << '\n';
+    recur(0);
 }
