@@ -7,7 +7,7 @@ vector<int> square;
 vector<int> temp = {1,2,3,4,5,6,7,8,9};
 int ans = 99999999;
 
-// 만들어진 스퀘어가 매직넘버인지 판별
+// 만들어진 스퀘어가 매직넘버인지 판별, 아니라면 false 반환
 bool IsMagicNumber()
 {
     int num = temp[0] + temp[1] + temp[2];
