@@ -26,10 +26,7 @@ int main()
     }
     // second 기준 오름차순 정렬하고 second 값이 같다면 first 기준 오름차순 정렬
     sort(v.begin(), v.end(), cmp);
-//    for(auto x : v)
-//    {
-//        cout << x.first << ' ' << x.second << endl;
-//    }
+
 
     long long endTime = v[0].second;
     int cnt = 1;
