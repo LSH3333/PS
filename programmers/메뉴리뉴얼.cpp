@@ -32,10 +32,6 @@ vector<string> solution(vector<string> orders, vector<int> course)
     sort(temp.begin(), temp.end());
     temp.erase(unique(temp.begin(),temp.end()), temp.end());
 
-    for(auto x : temp)
-        cout << x << ' ';
-    cout << endl;
-
     for(int c = 0; c < course.size(); c++)
     {
         int num = course[c];
