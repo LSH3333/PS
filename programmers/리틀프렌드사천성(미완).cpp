@@ -6,29 +6,17 @@
 #include <algorithm>
 using namespace std;
 
+vector<string> board;
 
-void Print(vector<string> board, int m, int n)
+bool bfs(int r, int c, int m, int n)
 {
-    cout << "PRINT: " << endl;
-    for(int i = 0; i < m; i++)
-    {
-        for(int j = 0; j < n; j++)
-        {
-            cout << board[i][j] << ' ';
-        } cout << endl;
-    }
-}
 
-bool bfs(int r, int c,  vector<string> &board, vector<vector<bool>> &mark, int m, int n)
-{
-//    cout << "----------------------------------------" << endl;
     int dr[] = {-1, 0, 1, 0};
     int dc[] = {0 ,1, 0, -1};
 
     queue<pair<pair<int,int>, pair<int,int>>> q;
     q.push({{r,c}, {-1, 0}});
-    mark[r][c] = true;
-    bool trigger = false;
+
     while(!q.empty())
     {
         int nr = q.front().first.first;
@@ -37,49 +25,38 @@ bool bfs(int r, int c,  vector<string> &board, vector<vector<bool>> &mark, int m
         int cnt = q.front().second.second;
         q.pop();
 
-        // 알파벳인데 목표 알파벳이 아니라면 continue
-        if(board[nr][nc] != '.' && board[nr][nc] != board[r][c]) continue;
-
-//        cout << nr << ' ' << nc << ' ' << dir << ' ' << cnt << endl;
-        if(trigger && board[nr][nc] == board[r][c])
-        {
-            if(cnt < 2)
-            {
-                board[nr][nc] = '.';
-                board[r][c] = '.';
-//                cout << "----------------------------------------" << endl;
-                return true;
-            }
-        }
-        else
-            mark[nr][nc] = true;
 
         for(int i = 0; i < 4; i++)
         {
+            // 반대로 갈 필요는 없다
+            if(dir != -1 && abs(dir-i) == 2) continue;
             int nnr = nr + dr[i];
             int nnc = nc + dc[i];
-            if(nnr < 0 || nnr >= m || nnc < 0 || nnc >= n ) continue;
-            if(board[nnr][nnc] == '*' || mark[nnr][nnc]) continue;
+            // 방향이 다르다 = 꺾은 횟수 + 1
+            int ncnt = (dir == i || dir == -1) ? cnt : cnt + 1;
+            // 범위
+            if(nnr < 0 || nnr >= m || nnc < 0 || nnc >= n) continue;
 
-            // 방향이 다르다면
-            if(dir != i && dir != -1)
+            if(ncnt > 1) continue;
+            if(board[nnr][nnc] == '*') continue;
+            if(board[nnr][nnc] == '.') q.push({{nnr,nnc},{i, ncnt}});
+            else if(board[nnr][nnc] == board[r][c])
             {
-                q.push({{nnr, nnc}, {i, cnt+1}});
+                board[r][c] = '.';
+                board[nnr][nnc] = '.';
+                return true;
             }
-            else
-                q.push({{nnr, nnc}, {i, cnt}});
-
-            trigger = true;
         }
+
     }
-//    cout << "----------------------------------------" << endl;
+
     return false;
 }
 
 
-string solution(int m, int n, vector<string> board) {
+string solution(int m, int n, vector<string> _board) {
     string answer = "";
-
+    board = _board;
     map<char, pair<int,int>> map;
     vector<char> v;
     for(int i = 0; i < m; i++)
@@ -98,89 +75,32 @@ string solution(int m, int n, vector<string> board) {
 //    for(auto x : v) cout << x << ' '; cout << endl;
 //    Print(board, m, n);
 
-    auto it = v.begin();
-    while(!v.empty())
+    bool impos = false;
+    vector<bool> v_mark(v.size(), false);
+
+    while(true)
     {
-
-//        cout << "target: " <<  *it << endl;
-//        cout << "v: ";
-//        for(auto x : v) cout << x << ' '; cout << endl;
-
-        char target = *it;
-        int r = map[target].first;
-        int c = map[target].second;
-//        cout << "r: " << r << ' ' << "c: " << c << endl;
-//        cout << "answer: " << answer << endl;
-        vector<vector<bool>> mark(110, vector<bool>(110, false));
-        if(!bfs(r, c, board, mark, m, n))
+        bool success = false;
+        for(int i = 0; i < v.size(); i++)
         {
-//            cout << "false" << endl;
-            it++;
-            if(it == v.end()) break;
+            if(v_mark[i]) continue;
+            char target = v[i];
+            int r = map[target].first;
+            int c = map[target].second;
+
+            if(bfs(r, c, m, n))
+            {
+                v_mark[i] = true;
+                answer.push_back(target);
+                success = true;
+                break;
+            }
         }
-        else
-        {
-//            cout << "true" << endl;
-            answer.push_back(*it);
-            v.erase(it);
-            it = v.begin(); // 여기?
-        }
-//        Print(board, m, n);
-//        cout << endl;
+        // 타일 제거 불가
+        if(!success) { impos = true; break; }
+        if(answer.size() == v.size()) { impos = false; break; }
     }
-//    cout << "HERE" << endl;
-    if(!v.empty()) return "IMPOSSIBLE";
+
+    if(impos) return "IMPOSSIBLE";
     return answer;
-}
-
-int main()
-{
-    vector<string> board =
-            {
-                    ".ZI.",
-                    "M.**",
-                    "MZU.",
-                    ".IU."
-            };
-
-    vector<string> board2 =
-            {
-                    "..I.",
-                    "....",
-                    "....",
-                    ".I.."
-            };
-    vector<string> board3 =
-            {
-                    "DBA",
-                    "C*A",
-                    "CDB"
-            };
-
-    vector<string> board4 =
-            {
-                    "FGHEI", "BAB..", "D.C*.", "CA..I", "DFHGE"
-            };
-    vector<string> board5 =
-            {
-                    "AB", "BA"
-            };
-    vector<string> board6 =
-            {
-                    "AA"
-            };
-    vector<string> board7 =
-            {
-                    "A..B",
-                    "....",
-                    "..BA"
-            };
-
-    vector<string> board8 =
-            {
-                    "A.B", "B.A", "C.C"
-            };
-    string ans = solution(4,4, board);
-    cout << "sol:" << endl;
-    cout << ans;
 }
