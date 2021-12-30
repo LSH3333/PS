@@ -10,9 +10,9 @@ int solution(int n, vector<vector<int>> results) {
     for(int i = 0; i < results.size(); i++)
         wins[results[i][0]][results[i][1]] = true;
 
-    // i가 j를 이겼다면
-    // j가 k를 이겼는지 확인하고 이겼다면
-    // i가 k를 이겼다 성립
+    // j가 i를 이겼다면
+    // i가 k를 이겼는지 확인하고 이겼다면
+    // j가 k를 이겼다 성립
     for(int i = 1; i <= n; i++)
     {
         for(int j = 1; j <= n; j++)
