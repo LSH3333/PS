@@ -16,7 +16,7 @@ vector<int> solution(vector<string> gems) {
     gemsKind = m.size();
     m.clear();
 
-    int start=0, end;
+    int start=0, end=0;
     for(int i = 0; i < gems.size(); i++)
     {
         m[gems[i]]++;
@@ -25,49 +25,33 @@ vector<int> solution(vector<string> gems) {
 
     answer.push_back(0);
     answer.push_back(end);
+    int sub = answer[1] - answer[0];
     while(end < gems.size())
     {
-        cout << answer[0] << ' ' << answer[1] << endl;
         string target = gems[start];
-        m[target]--;
         start++;
+        m[target]--;
 
+        // 타깃 보석의 남은 수가 0개가 됐다면,
+        // end 증가시켜 뒤에 해당 보석이 있는지 탐색
         if(m[target] == 0)
         {
-            bool foundTarget = false;
-            for(int i = end+1; i < gems.size(); i++)
+            for(end++; end < gems.size(); end++)
             {
-                m[gems[i]]++;
-                if(gems[i] == target)
-                {
-                    end = i;
-                    foundTarget = true;
-                    break;
-                }
+                m[gems[end]]++;
+                if(gems[end] == target) break;
             }
-            if(end == gems.size()) break;
+            if(end == gems.size()) break; // gems 배열 끝에 도달함
+
         }
-        if(end-start < answer[1]-answer[0])
+        if(sub > end - start)
         {
             answer[0] = start;
             answer[1] = end;
+            sub = end - start;
         }
     }
-    cout << endl;
-    cout << answer[0] << ' ' << answer[1];
+
+    answer[0]++; answer[1]++;
     return answer;
-}
-
-int main()
-{
-    vector<string> gems =
-            {
-                    "DIA", "RUBY", "RUBY", "DIA", "DIA", "EMERALD", "SAPPHIRE", "DIA"
-            };
-
-    vector<string> gems2 =
-            {
-                    "AA", "AB", "AC", "AA", "AC"
-            };
-    solution(gems2);
 }
