@@ -7,7 +7,8 @@ using namespace std;
 
 int dr[] = {-1, 0, 1, 0};
 int dc[] = {0, 1, 0, -1};
-vector<vector<int>> mark(30, vector<int>(30, INF));
+//vector<vector<int>> mark(30, vector<int>(30, 0));
+bool mark[30][30][4];
 vector<vector<int>> _board;
 int ans = INF;
 
@@ -15,7 +16,10 @@ void bfs()
 {
     // {r,c}, {dir,cost}
     queue<pair<pair<int,int>, pair<int,int>>> q;
-    mark[0][0] = 0;
+    mark[0][0][0] = true;
+    mark[0][0][1] = true;
+    mark[0][0][2] = true;
+    mark[0][0][3] = true;
     q.push({{0,0},{-1,0}});
 
     while(!q.empty())
@@ -29,6 +33,7 @@ void bfs()
         if(r == _board.size()-1 && c == _board.size()-1)
         {
             ans = min(ans, cost);
+            continue;
         }
 
         for(int i = 0; i < 4; i++)
@@ -41,11 +46,11 @@ void bfs()
             if(dir == -1 || i == dir) nCost = cost + 100;
             else nCost = cost + 600; // 코너는 100원에 500원이 추가로 듦
 
-            // 최솟값 구해야하므로, 다음 지점이 nCost 보다 크거나 같을때만 이동함
-            if(mark[nr][nc] >= nCost)
+            if(!mark[nr][nc][i] || nCost <= _board[nr][nc])
             {
-                mark[nr][nc] = nCost;
-                q.push({{nr,nc}, {i, nCost}});
+                q.push({{nr,nc}, {i,nCost}});
+                mark[nr][nc][i] = true;
+                _board[nr][nc] = nCost;
             }
         }
 
