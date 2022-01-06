@@ -1,23 +1,32 @@
 import java.util.*
-
+import java.io.*;
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 fun main()
 {
-    val sc = Scanner(System.`in`)
+//    val br = BufferedReader(InputStreamReader(System.`in`))
+//    var aaa = br.readLine().split(' ').map{it.toInt()}
 
-    var t = sc.nextInt()
+
+    val sc = Scanner(System.`in`)
+    val br = BufferedReader(InputStreamReader(System.`in`))
+
+    var t = br.readLine().toInt()
     while(t-- > 0)
     {
-        var n = sc.nextInt()
-        var d = Array(3){Array(100010){0} }
-        var a = Array(2){Array(100010){0} }
+        var n = br.readLine().toInt()
+        var d = Array(3){Array(n+1){0} }
+        var a = Array(2){Array(n+1){0} }
 
         for(i in 0 until 2)
         {
+            var tmp = br.readLine().split(' ').map{it.toInt()}
             for(j in 0 until n)
             {
-                var num = sc.nextInt()
-                a[i][j] = num
+                a[i][j] = tmp[j]
             }
         }
 
