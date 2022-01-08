@@ -1,69 +1,105 @@
 #include <vector>
-#include <queue>
 #include <algorithm>
 #include <iostream>
 using namespace std;
-////// dp로? 다시풀어야함
-
 
 int MOD = 20170805;
-int dr[] = {0, 1};
-int dc[] = {1, 0};
 int M, N;
-int cnt = 0;
-int mark[510][510];
 vector<vector<int>> map;
-bool possible;
 
-void dfs(int r, int c, int dir)
+void Print(vector<vector<vector<int>>> &mark)
 {
-    if(r == M-1 && c == N-1)
+    for(int i = 0; i < 2; i++)
     {
-        possible = true;
-        return;
+        for(int j = 0; j < M; j++)
+        {
+            for(int k = 0; k < N; k++)
+            {
+                cout << mark[i][j][k] << ' ';
+            } cout<<endl;
+        }cout << endl;
     }
+}
+
+bool dfs(int r, int c, int dir, vector<vector<vector<int>>> &mark)
+{
+    if(r < 0 || r >= M || c < 0 || c >= N) return false;
     if(map[r][c] == 1)
     {
-        possible = false;
-        return;
+        return false;
+    }
+    if(dir != -1 && map[r][c] == 2 && mark[dir][r][c] == -2)
+    {
+        return false;
+    }
+    if(mark[0][r][c] > 0 || mark[1][r][c] > 0)
+    {
+        return true;
     }
 
-
+    int dr[] = {0, 1};
+    int dc[] = {1, 0};
+    bool isPossible = false;
     for(int i = 0; i < 2; i++)
     {
         int nr = r + dr[i];
         int nc = c + dc[i];
-        if(nr < 0 || nr >= M || nc < 0 || nc >= N) continue;
         // 다음 도로가 2이면 직진만 가능
         if(map[r][c] == 2 && dir != -1 && dir != i) continue;
 
-        mark[nr][nc] = true;
-        dfs(nr, nc, i);
-        if(!possible) mark[nr][nc] = false;
+        // 다음 칸이 도착지점으로 가는 경로라면
+        if(dfs(nr, nc, i, mark))
+        {
+            isPossible = true;
+            if(map[nr][nc] == 0)
+            {
+                int a = mark[0][nr][nc] == -2 ? 0 : mark[0][nr][nc];
+                int b = mark[1][nr][nc] == -2 ? 0 : mark[1][nr][nc];
+                mark[i][r][c] = (a + b) % MOD;
+//                mark[i][r][c] = (mark[0][nr][nc] % MOD) + (mark[1][nr][nc] % MOD);
+            }
+            else if(map[nr][nc] == -1) // 도착지점
+            {
+                mark[i][r][c] = 1;
+            }
+            else if(map[nr][nc] == 2)
+            {
+                mark[i][r][c] = mark[i][nr][nc] % MOD;
+            }
+        }
+        else
+        {
+            if(nr >= 0 && nr < M && nc >= 0 && nc < N && map[nr][nc] == 0) mark[i][r][c] = mark[(i+1)%2][nr][nc];
+            else mark[i][r][c] = -2;
+        }
     }
-
+    return isPossible;
 }
 
 int solution(int m, int n, vector<vector<int>> city_map) {
     int answer = 0;
     M = m; N = n;
     map = city_map;
-    cnt = 0;
+    MOD = 20170805;
+    vector<vector<vector<int>>> mark(2, vector<vector<int>>(510, vector<int>(510,0)));
 
-    dfs(0,0,-1);
 
-    for(int i = 0; i < m; i++)
-    {
-        for(int j = 0; j < n; j++)
-        {
-            cout << mark[i][j] << ' ';
-        } cout << endl;
-    }cout <<endl;
+    if(M == 1 && N == 1) return 0;
+    map[M-1][N-1] = -1;
+    mark[0][M-1][N-1] = 1;
+    mark[1][M-1][N-1] = 1;
 
-    cout << cnt;
-    answer = cnt;
+    dfs(0,0,-1, mark);
+
+//    Print();
+    int a = mark[0][0][0] < 0 ? 0 : mark[0][0][0];
+    int b = mark[1][0][0] < 0 ? 0 : mark[1][0][0];
+    answer = (a + b) % MOD;
+//    cout << answer;
     return answer;
 }
+
+
 
 int main()
 {
@@ -85,6 +121,12 @@ int main()
                     {0,0,1},
                     {0,0,0}
             };
+    vector<vector<int>> tmp2 =
+            {
+                    {0,1},
+                    {0,0}
+            };
+    vector<vector<int>> tmp3(2, vector<int>(400,0));
+    solution(3, 3, city_map1);
 
-    solution(3,3, tmp1);
 }
