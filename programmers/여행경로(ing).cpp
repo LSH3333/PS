@@ -7,14 +7,17 @@ using namespace std;
 
 int maxN;
 map<string, vector<pair<string,bool>>> m;
-map<string, int> mcnt;
-vector<string> answer;
+vector<string> answer, ans;
+bool trigger;
 
 void dfs(string loc)
 {
-    // graph 끝에 도달했는데 모든 공항 방문하지 않았다면
-    if(mcnt[loc] == 0 && answer.size() < maxN)
+    if(trigger) return;
+    // 모든 경로 찾음
+    if(answer.size() == maxN+1 && !trigger)
     {
+        trigger = true;
+        for(auto x : answer) ans.push_back(x);
         return;
     }
 
@@ -40,54 +43,11 @@ vector<string> solution(vector<vector<string>> tickets)
     for(auto i : tickets)
     {
         m[i[0]].push_back({i[1], false});
-        mcnt[i[0]]++;
     }
 
     for(auto &x : m) sort(x.second.begin(), x.second.end());
 
-    for(auto x : m)
-    {
-        cout << x.first << ": ";
-        for(auto y : x.second)
-        {
-            cout << y.first << ' ';
-        }cout << endl;
-    }
-
-
     answer.push_back("ICN");
     dfs("ICN");
-    for(auto x : answer) cout << x << ' ';
-    return answer;
-
-}
-
-int main()
-{
-    vector<vector<string>> tickets =
-            {
-                    {"ICN", "SFO"},
-                    {"ICN", "ATL"},
-                    {"SFO", "ATL"},
-                    {"ATL", "ICN"},
-                    {"ATL", "SFO"}
-            };
-
-    vector<vector<string>> tickets2 =
-            {
-                    {"A", "B"},
-                    {"A", "C"},
-                    {"C", "A"}
-            };
-
-    vector<vector<string>> tickets3 =
-            {
-                    {"ICN", "A"},
-                    {"A", "B"},
-                    {"A", "C"},
-                    {"B", "D"},
-                    {"C", "A"},
-            };
-
-    solution(tickets3);
+    return ans;
 }
