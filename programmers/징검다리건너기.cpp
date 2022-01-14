@@ -7,24 +7,29 @@ using namespace std;
 int solution(vector<int> stones, int k) {
     int answer = 2000000000;
 
-    for(int i = k-1; i < stones.size(); i++)
+    int tmp = 0;
+    for(int i = 0; i < k; i++)
     {
-        int maxN = 0;
-        for(int j = i; j > i-k; j--)
+        tmp = max(tmp, stones[i]);
+    }
+
+    answer = tmp;
+    for(int i = k; i < stones.size(); i++)
+    {
+        if(max(tmp,stones[i]) == stones[i-k])
         {
-             maxN = max(stones[j], maxN);
+            tmp = 0;
+            for(int j = i; j > i-k; j--)
+            {
+                tmp = max(tmp, stones[j]);
+            }
         }
-        answer = min(answer, maxN);
+        else
+        {
+            tmp = max(tmp, stones[i-k+1]);
+        }
+        answer = min(answer, tmp);
     }
 
     return answer;
-}
-
-int main()
-{
-    vector<int> stones =
-            {
-                    2, 4, 5, 3, 2, 1, 4, 2, 5, 1
-            };
-    solution(stones, 3);
 }
