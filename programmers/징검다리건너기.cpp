@@ -4,6 +4,7 @@
 #include <iostream>
 using namespace std;
 
+// lower_bound를 이용?
 int solution(vector<int> stones, int k) {
     int answer = 2000000000;
 
@@ -32,4 +33,10 @@ int solution(vector<int> stones, int k) {
     }
 
     return answer;
+}
+
+
+int main()
+{
+
 }
