@@ -68,6 +68,7 @@ string solution(string play_time, string adv_time, vector<string> logs) {
         long long totalTime = 0;
         for(int j = 0; j < timeLogs.size(); j++)
         {
+            if(timeLogs[j].second < beginTime) continue;
             if(endTime < timeLogs[j].first) break;
             else if(timeLogs[j].second < beginTime) totalTime += 0;
             else if(beginTime <= timeLogs[j].first && timeLogs[j].second <= endTime)
@@ -99,4 +100,39 @@ string solution(string play_time, string adv_time, vector<string> logs) {
 //    cout << ChangeToString(returnTime);
 
     return ChangeToString(returnTime);
+}
+
+int main()
+{
+    string play_time = "02:03:55";
+    string adv_time = "00:14:15";
+    vector<string> logs =
+            {
+                    "01:20:15-01:45:14",
+                    "00:40:31-01:00:00",
+                    "00:25:50-00:48:29",
+                    "01:30:59-01:53:29",
+                    "01:37:44-02:02:30"
+            };
+
+    string play_time2 = "99:59:59";
+    string adv_time2 = "25:00:00";
+    vector<string> logs2 =
+            {
+                    "69:59:59-89:59:59",
+                    "01:00:00-21:00:00",
+                    "79:59:59-99:59:59",
+                    "11:00:00-31:00:00"
+            };
+
+    string play_time3 = "50:00:00";
+    string adv_time3 = "50:00:00";
+    vector<string> logs3 =
+            {
+                    "15:36:51-38:21:49",
+                    "10:14:18-15:36:51",
+                    "38:21:49-42:51:45"
+            };
+
+    solution(play_time3, adv_time3, logs3);
 }
