@@ -1,39 +1,37 @@
 #include <string>
 #include <vector>
-#include <algorithm>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 int solution(vector<int> stones, int k) {
-    int answer = 2000000000;
+    int answer = 0;
 
-    int maxN = 0;
-    for(int i = 0; i < k; i++) maxN = max(stones[i], maxN);
-    answer = maxN;
-
-    for(int i = k-1; i < stones.size(); i++)
+    int left = 1;
+    int right = *max_element(stones.begin(), stones.end());
+    while(left <= right)
     {
-        if(stones[i-k] == maxN)
+        int mid = (left + right) / 2;
+        bool possible = true;
+        int cnt = 0; // 물에 잠긴 연속된 돌다리의 수
+        for(int i = 0; i < stones.size(); i++)
         {
-            maxN = 0;
-            for(int j = i; j > i-k; j--)
-            {
-                maxN = max(stones[j], maxN);
-            }
+            if(stones[i] < mid) cnt++;
+            else cnt = 0;
+            // 물에 잠긴 연속된 돌다리수가 k개가 되면 더이상 건널수 없음
+            if(cnt >= k) { possible = false; break; }
         }
-        else if(stones[i] > maxN)
-        {
-            maxN = stones[i];
-        }
-        if(maxN < answer) answer = maxN;
-//        cout << "i: " << i << ' ' << maxN << endl;
-    }
-//    cout << answer;
-    return answer;
-}
 
-int main()
-{
-    vector<int> stones = {2,4,5,3,2,1,4,2,5,1};
-    solution(stones, 3);
+        // mid명이 건널수 없으면 줄임
+        if(!possible)
+        {
+            right = mid - 1;
+        }
+        else // mid명이 건널수 있으면 늘림 (최댓값 구해야하므로)
+        {
+            answer = mid;
+            left = mid + 1;
+        }
+    }
+    return answer;
 }
