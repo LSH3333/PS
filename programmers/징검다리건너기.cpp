@@ -4,39 +4,36 @@
 #include <iostream>
 using namespace std;
 
-// lower_bound를 이용?
 int solution(vector<int> stones, int k) {
     int answer = 2000000000;
 
-    int tmp = 0;
-    for(int i = 0; i < k; i++)
-    {
-        tmp = max(tmp, stones[i]);
-    }
+    int maxN = 0;
+    for(int i = 0; i < k; i++) maxN = max(stones[i], maxN);
+    answer = maxN;
 
-    answer = tmp;
-    for(int i = k; i < stones.size(); i++)
+    for(int i = k-1; i < stones.size(); i++)
     {
-        if(max(tmp,stones[i]) == stones[i-k])
+        if(stones[i-k] == maxN)
         {
-            tmp = 0;
+            maxN = 0;
             for(int j = i; j > i-k; j--)
             {
-                tmp = max(tmp, stones[j]);
+                maxN = max(stones[j], maxN);
             }
         }
-        else
+        else if(stones[i] > maxN)
         {
-            tmp = max(tmp, stones[i-k+1]);
+            maxN = stones[i];
         }
-        answer = min(answer, tmp);
+        if(maxN < answer) answer = maxN;
+//        cout << "i: " << i << ' ' << maxN << endl;
     }
-
+//    cout << answer;
     return answer;
 }
 
-
 int main()
 {
-
+    vector<int> stones = {2,4,5,3,2,1,4,2,5,1};
+    solution(stones, 3);
 }
