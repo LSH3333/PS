@@ -3,6 +3,8 @@
 #include <iostream>
 using namespace std;
 
+// 시간 초과
+// 배열에 숫자를 넣지 않고 진행하는 방법있을까?
 vector<int> solution(int n, long long left, long long right) {
     vector<int> answer;
 
