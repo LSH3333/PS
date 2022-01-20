@@ -9,6 +9,8 @@ struct Tree
     Tree* parent;
 };
 
+// 벡터에 푸쉬했을때 주소값이 바뀔수 있으므로
+// enroll을 돌면서 먼저 모든 맴버들을 푸쉬한후에 다시 돌면서 부모의 주소값을 찾아가야한다
 vector<int> solution(vector<string> enroll, vector<string> referral, vector<string> seller, vector<int> amount) {
     vector<int> answer;
     vector<Tree> v;
@@ -40,7 +42,7 @@ vector<int> solution(vector<string> enroll, vector<string> referral, vector<stri
 //        else cout << v[i].parent->name << endl << endl;
 //    }
 
-    
+
     return answer;
 }
 
