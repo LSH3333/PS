@@ -3,51 +3,25 @@
 #include <iostream>
 using namespace std;
 
-// 시간 초과
-// 배열에 숫자를 넣지 않고 진행하는 방법있을까?
 vector<int> solution(int n, long long left, long long right) {
     vector<int> answer;
-
-    vector<vector<int>> arr(n, vector<int>(n));
-    arr[0][0] = 1;
-    for(int idx = 1; idx < n; idx++)
-    {
-        int r = idx;
-        int c = 0;
-
-        // to right
-        while(true)
-        {
-            arr[r][c] = idx+1;
-            if(c >= idx) break;
-            c++;
-        }
-        // to up
-        while(true)
-        {
-            arr[r][c] = idx+1;
-            if(r == 0) break;
-            r--;
-        }
-    }
 
     long long left_r = left / n;
     long long left_c = left % n;
     long long right_r = right / n;
     long long right_c = right % n;
+//    cout << left_r << ' ' << left_c << endl;
+//    cout << right_r << ' ' << right_c << endl << endl;
 
-    for(long long i = left_c; i < n; i++) answer.push_back(arr[left_r][i]);
-    for(long long i = left_r+1; i < right_r; i++)
+    int r = left_r, c = left_c;
+    while(true)
     {
-        for(int j = 0; j < n; j++) answer.push_back(arr[i][j]);
+        if(c > r) answer.push_back((r+1) + (c-r));
+        else answer.push_back(r+1);
+        if(r == right_r && c == right_c) break;
+        if(++c >= n) { c = 0; r++; }
     }
-    for(long long i = 0; i <= right_c; i++) answer.push_back(arr[right_r][i]);
 
+//    for(auto x : answer) cout << x << ' ';
     return answer;
-}
-
-int main()
-{
-    solution(3,2,5);
-//    solution(4,7,14);
 }
