@@ -14,8 +14,6 @@ bool Calculate(int a, int b, int c)
     if(a <= c && c <= b) return true;
     if(a <= c2 && c2 <= b) return true;
     return false;
-
-
 }
 
 int solution(int n, vector<int> weak, vector<int> dist) {
@@ -25,17 +23,32 @@ int solution(int n, vector<int> weak, vector<int> dist) {
 
     sort(dist.begin(), dist.end());
     do {
-        cout << "dist: ";
-        for(auto x : dist) cout << x << ' '; cout << endl;
+//        cout << "dist: ";
+//        for(auto x : dist) cout << x << ' '; cout << endl;
         for(int a = 0; a < de.size(); a++)
         {
-            for(auto x : de) cout << x << ' '; cout << endl;
+//            for(auto x : de) cout << x << ' '; cout << endl;
             int distIdx = 0;
-            for(int i = 0; i < de.size()-1; i++)
+            int weakIdx = 0;
+            int depart = de[0];
+            int arrive = depart + dist[0];
+            while(true)
             {
-                if(Calculate(de[i], de[i]+dist[distIdx], de[i+1])) i++;
+                if(Calculate(depart, arrive, de[weakIdx]))
+                {
+                    weakIdx++;
+                }
+                else
+                {
+                    distIdx++;
+                    depart = de[weakIdx];
+                    arrive = depart + dist[distIdx];
+                }
+                if(weakIdx == de.size()) break;
+                if(distIdx == dist.size()) { distIdx = -2; break; }
             }
-            cout << distIdx+1 << endl;
+
+//            cout << distIdx+1 << endl;
             answer = min(distIdx+1, answer);
 
             int frontN = de.front();
@@ -43,7 +56,7 @@ int solution(int n, vector<int> weak, vector<int> dist) {
             de.push_back(frontN);
         }
     } while(next_permutation(dist.begin(), dist.end()));
-    cout << "answer: " << answer;
+//    cout << "answer: " << answer;
     return answer;
 }
 
@@ -52,4 +65,8 @@ int main()
     vector<int> weak = {1, 5, 6, 10};
     vector<int> dist = {1, 2, 3, 4};
     solution(12, weak, dist);
+
+    vector<int> weak2 = {1,3,4,9,10};
+    vector<int> dist2 = {3,5,7};
+    solution(12, weak2, dist2);
 }
