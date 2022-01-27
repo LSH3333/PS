@@ -4,30 +4,28 @@
 #include <algorithm>
 using namespace std;
 
-// 이분탐색?
-// upper_bound로 좌측최솟값, 우측최솟값 중 하나 보다 큰 값으로 바로 이동
 int solution(vector<int> a) {
     int answer = 0;
-//    for(auto x : a) cout << x << ' '; cout << endl;
 
-    int minLeft = a[0];
-    int minRight = *min_element(a.begin()+2, a.end());
-
-    for(int i = 1; i < a.size()-1; i++)
+    vector<int> l(a.size());
+    vector<int> r(a.size());
+    int minVal = a[0];
+    for(int i = 0; i < a.size(); i++)
     {
-        if(a[i] == minRight)
-        {
-            minRight = *min_element(a.begin()+i+1, a.end());
-        }
-        if(a[i-1] < minLeft)
-        {
-            minLeft = a[i-1];
-        }
-
-        // a[i]가 minLeft보다도 크고 and minRight보다도 크면 불가능
-        if(!(a[i] > minLeft && a[i] > minRight)) answer++;
+        minVal = min(minVal, a[i]);
+        l[i] = minVal;
+    }
+    minVal = a[a.size()-1];
+    for(int i = a.size()-1; i >= 0; i--)
+    {
+        minVal = min(minVal, a[i]);
+        r[i] = minVal;
+    }
+    for(int i = 0; i < a.size(); i++)
+    {
+        // a[i]의 좌측 최솟값 보다 크고 && a[i]의 우측 최솟값 보다 크면 불가능
+        if(!((a[i] > l[i]) && (a[i] > r[i]))) answer++;
     }
 
-//    cout << answer+2;
-    return answer+2;
+    return answer;
 }
