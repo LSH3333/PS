@@ -5,7 +5,7 @@
 using namespace std;
 
 // 이분탐색?
-// 
+// upper_bound로 좌측최솟값, 우측최솟값 중 하나 보다 큰 값으로 바로 이동
 int solution(vector<int> a) {
     int answer = 0;
 //    for(auto x : a) cout << x << ' '; cout << endl;
