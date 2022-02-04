@@ -33,15 +33,15 @@ void bfs(vector<vector<int>> board)
                 int c = q.front().first.second;
                 int depth = q.front().second;
                 q.pop();
-                cout << "target: " << target << endl;
-                cout << r << ' ' << c << ' ' << depth << endl;
+//                cout << "target: " << target << endl;
+//                cout << r << ' ' << c << ' ' << depth << endl;
                 if(board[r][c] == target)
                 {
-                    cout << "-----------found, depth: " << depth << endl;
+//                    cout << "-----------found, depth: " << depth << endl;
                     cnt += depth+1;
                     curR = r; curC = c;
                     board[r][c] = 0;
-                    continue;
+                    break;
                 }
 
                 // 한칸씩 이동
@@ -63,32 +63,24 @@ void bfs(vector<vector<int>> board)
                     {
                         nr = nr + dr[i];
                         nc = nc + dc[i];
+
                         if(nr < 0 || nr >= 4 || nc < 0 || nc >= 4)
                         {
                             nr = nr - dr[i];
                             nc = nc - dc[i];
-                            if(!mark[nr][nc])
-                            {
-                                mark[nr][nc] = true;
-                                q.push({{nr,nc}, depth+1});
-                                break;
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        if(board[nr][nc] != 0 && !mark[nr][nc])
-                        {
-                            q.push({{nr,nc}, depth+1});
-                            mark[nr][nc] = true;
                             break;
                         }
+                        if(board[nr][nc] != 0) break;
+                    }
+                    if(!mark[nr][nc])
+                    {
+                        mark[nr][nc] = true;
+                        q.push({{nr,nc}, depth+1});
                     }
                 }
             }
         }
-        cout << "cnt: " << cnt << endl;
+//        cout << "cnt: " << cnt << endl;
     }
     answer = min(answer, cnt);
 }
@@ -107,12 +99,12 @@ int solution(vector<vector<int>> board, int r, int c)
     per.erase(unique(per.begin(), per.end()), per.end());
 
     do {
-        cout << "per: ";
-        for(auto x : per) cout << x << ' '; cout << endl;
+//        cout << "per: ";
+//        for(auto x : per) cout << x << ' '; cout << endl;
         bfs(board);
     } while(next_permutation(per.begin(), per.end()));
 
-    cout << answer;
+//    cout << answer;
     return answer;
 }
 
@@ -120,20 +112,19 @@ int main()
 {
 //    vector<vector<int>> board =
 //            {
-//                    {3,0,0,2},
-//                    {0,0,1,0},
-//                    {0,1,0,0},
-//                    {2,0,0,3}
+//                    {1,0,0,3},
+//                    {2,0,0,0},
+//                    {0,0,0,2},
+//                    {3,0,1,0}
 //            };
-//    solution(board, 0, 1);
+//    solution(board, 1, 0);
 
     vector<vector<int>> board =
             {
-                    {1,0,0,3},
-                    {2,0,0,0},
-                    {0,0,0,2},
-                    {3,0,1,0}
+                    {3,0,0,2},
+                    {0,0,1,0},
+                    {0,1,0,0},
+                    {2,0,0,3}
             };
-    solution(board, 1, 0);
-
+    solution(board, 0, 1);
 }
