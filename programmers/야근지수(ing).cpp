@@ -2,39 +2,26 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <queue>
 using namespace std;
 
 long long solution(int n, vector<int> works) {
     long long answer = 0;
-    // 내림차순 정렬
-    sort(works.begin(), works.end(), greater<>());
+    priority_queue<int> pq(works.begin(), works.end());
 
-    int idx = 0;
     while(n > 0)
     {
-        if(idx+1 >= works.size())
-        {
-            works[idx]--;
-            idx = 0;
-            n--;
-            continue;
-        }
-
-        if(works[idx] >= works[idx+1]) {works[idx]--; n--;}
-        else idx++;
+        int top = pq.top();
+        if(top == 0) break;
+        pq.pop();
+        top--; n--;
+        pq.push(top);
     }
 
-    for(auto x : works)
+    while(!pq.empty())
     {
-        if(x < 0) { cout << 0; return 0;}
-        answer += x * x;
+        answer += pq.top() * pq.top();
+        pq.pop();
     }
-
     return answer;
-}
-
-int main()
-{
-    vector<int> works = {4,3,3};
-    solution(4, works);
 }
