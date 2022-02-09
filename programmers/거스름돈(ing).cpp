@@ -1,38 +1,50 @@
-#include <iostream>
+#include <string>
 #include <vector>
 #include <algorithm>
-#define MOD 100000007
+#include <iostream>
+#define MOD 1000000007
 using namespace std;
 
-long long d[101][100001];
+int d[101][100001];
 
 int solution(int n, vector<int> money) {
     int answer = 0;
+//    sort(money.begin(), money.end());
 
-    for(int c = 1; c <= n; c++)
+    for(int i = 0; i < money.size(); i++)
+        d[i][money[i]] = 1;
+
+    for(int i = 0; i < money.size(); i++)
     {
-        long long cnt = 0;
-        for(int r = 0; r < money.size(); r++)
+        for(int j = 1; j <= n; j++)
         {
-            if(c - money[r] <= 0)
+            int coin = money[i];
+            if(i == 0)
             {
-                d[r][c] = 1 + cnt;
-                cnt += d[r][c];
-                continue;
+                if(j-coin < 1) continue;
+                d[i][j] += d[i][j-coin] % MOD;
             }
-            d[r][c] += d[r][c - money[r]] + cnt;
-            cnt += d[r][c];
+            else
+            {
+                if(j-coin >= 1)
+                {
+                    d[i][j] += d[i-1][j] % MOD;
+                    d[i][j] += d[i][j-coin] % MOD;
+                }
+                else d[i][j] += d[i-1][j] % MOD;
+            }
         }
     }
+//
+//    for(int i = 0; i < money.size(); i++)
+//    {
+//        for(int j = 1; j <= n; j++)
+//        {
+//            cout << d[i][j] << ' ';
+//        } cout << endl;
+//    }
 
-    for(int r = 0; r < money.size(); r++)
-    {
-        for(int c = 1; c <= n; c++)
-        {
-            cout << d[r][c] << ' ';
-        } cout << endl;
-    }
-
+    answer = d[money.size()-1][n];
     return answer;
 }
 
