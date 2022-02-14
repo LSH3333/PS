@@ -50,7 +50,7 @@ int solution(vector<string> line)
         int cnt = 0;
         for(int j = 0; j < times.size(); j++)
         {
-            // 요청시간과 요청마감시간이 1초 범위를 감싸고 있을때를 포함안함 
+            // 요청시간과 요청마감시간이 1초 범위를 감싸고 있을때를 포함안함
 //            if(times[j].first >= startTime && times[j].first <= endTime) cnt++;
 //            else if(times[j].second >= startTime && times[j].second <= endTime) cnt++;
             if(times[j].second < startTime || times[j].first > endTime) continue;
