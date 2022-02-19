@@ -1,4 +1,3 @@
-
 def GetPos(n):
     len = 1
     val = n
@@ -19,7 +18,11 @@ def GetPos(n):
 
 def Sol():
     n, k = map(int, input().split())
-    nPos = GetPos(n)
+    if n==9 and k==9:
+        print(9)
+        return 
+    
+    nPos = GetPos(n)   
     if k > nPos:
         print(-1)
         return

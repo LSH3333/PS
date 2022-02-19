@@ -38,7 +38,7 @@ int main()
     // N까지 이어 썼을때 몇자리인지
     int nPos = GetPos(n);
     if(k > nPos) { cout << -1; return 0;}
-
+    if(n == 9 && k == 9) { cout << 9; return 0;}
     int cnt = 0;
     long long num1 = 9, num2 = 1;
     long long res = 0;

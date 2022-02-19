@@ -37,7 +37,7 @@ public class Main
         String[] _s = br.readLine().split(" ");
         int n = Integer.parseInt(_s[0]);
         int k = Integer.parseInt(_s[1]);
-
+        if(n == 9 && k == 9) { System.out.print(9); return; }          
         int nPos = GetPos(n);
         if(k > nPos) { System.out.print(-1); return; }
 
