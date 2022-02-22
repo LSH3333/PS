@@ -1,78 +1,69 @@
-#include <iostream>
 #include <string>
 #include <vector>
+#include <iostream>
 using namespace std;
+
 
 struct TRIE
 {
     TRIE *Node[26];
-    int Child;
-    bool Finish;
+    bool finish = false;
+    int child = 0;
 
-    void Insert(const char *Str);
-    int Find(const char *Str, int Cnt);
+    void Insert(const char* str);
+    int Find(const char* str, int cnt);
 };
 
-int Trie_Idx;
-TRIE Nodepool[1000010];
+int TrieIdx;
+TRIE NodePool[1000010];
 
-// node 생성
-TRIE *Nodeset()
+// 새로운 node 생성
+TRIE* NodeSet()
 {
-    // Nodepool에 새로운 노드 생성
-    TRIE *NewNode = &Nodepool[Trie_Idx++];
-    // 알파벳 node null로 초기화
+    TRIE *NewNode = &NodePool[TrieIdx++];
     for(int i = 0; i < 26; i++) NewNode->Node[i] = NULL;
-    NewNode->Child = 0;
-
     return NewNode;
 }
 
-void TRIE::Insert(const char* Str)
+// 문자열 끝 도달할때까지 재귀적으로 호출
+// "abcd" -> "bcd" -> "cd" -> "d"
+void TRIE::Insert(const char* str)
 {
-    Child++;
-    if(*Str == NULL)
+    child++;
+    // 문자열 끝
+    if(*str == NULL)
     {
-        Finish = true;
+        finish = true;
         return;
     }
 
-    // 알파벳 인덱스
-    int Cur = *Str - 'a';
-    // 해당 알파벳 없으면 새로 노드 생성
-    if(Node[Cur] == NULL) Node[Cur] = Nodeset();
-    Node[Cur]->Insert(Str+1);
+    // 문자열의 첫 문자
+    int cur = *str - 'a';
+    // 해당 알파벳 노드가 없으면 새로 생성
+    if(Node[cur] == NULL) Node[cur] = NodeSet();
+    // 현재 문자에서 이어지는 노드 삽입하도록함
+    Node[cur]->Insert(str+1);
 }
 
-int TRIE::Find(const char *Str, int Cnt)
+int TRIE::Find(const char* str, int cnt)
 {
-    if(Child == 1 || *Str == NULL) return Cnt;
+    // 문자열 끝이거나, child가 1이면 현재 노드부터 아래로는 하나의 문자열만 존재함
+    if(*str == NULL || child == 1)
+    {
+        return cnt;
+    }
 
-    int Cur = *Str - 'a';
-    return Node[Cur]->Find(Str+1, Cnt+1);
+    int cur = *str - 'a';
+    return Node[cur]->Find(str+1, cnt+1);
 }
 
-int solution(vector<string> words)
-{
-    Trie_Idx = 0;
+
+int solution(vector<string> words) {
     int answer = 0;
-    int N = words.size();
-    TRIE *Root = Nodeset();
 
-    // 문자열 트라이에 삽입
-    for(int i = 0; i < N; i++) Root->Insert(words[i].c_str());
-    // 트라이에서 검색
-    for(int i = 0; i < N; i++) answer = answer + Root->Find(words[i].c_str(), 0);
+    TRIE* root = NodeSet();
+    for(int i = 0; i < words.size(); i++) root->Insert(words[i].c_str());
+    for(int i = 0; i < words.size(); i++) answer += root->Find(words[i].c_str(), 0);
 
-    cout << endl << "answer: " << answer;
     return answer;
-}
-
-int main()
-{
-    vector<string> words = {"word","war","warrior","world"};
-    solution(words);
-
-    string s = "abcd";
-
 }
