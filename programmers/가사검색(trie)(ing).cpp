@@ -3,13 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <map>
-#include <memory.h>
 using namespace std;
-
-bool cmp(const string &a, const string &b)
-{
-    return a.size() < b.size();
-}
 
 struct TRIE
 {
@@ -22,7 +16,9 @@ struct TRIE
 };
 
 int TrieIdx;
-TRIE NodePool[1000010];
+TRIE *Trie[10010];
+TRIE *R_Trie[10010];
+TRIE NodePool[1000010 * 2];
 
 TRIE *NodeSet()
 {
@@ -56,139 +52,67 @@ int TRIE::Find(const char * str)
     return Node[cur]->Find(str+1);
 }
 
-void DivideBySize(map<int, vector<string>> &divided, vector<string> targets)
+string Reverse(string s)
 {
-    int curWordSize = 0;
-    vector<string> tmp;
-    for(auto word : targets)
-    {
-        if(curWordSize != word.size() && !tmp.empty())
-        {
-            divided[curWordSize] = tmp;
-            tmp.clear();
-        }
-        tmp.push_back(word);
-        curWordSize = word.size();
-    }
-    divided[targets.back().size()] = tmp;
+    string tmp;
+    reverse(s.begin(), s.end());
+    tmp = s;
+    return tmp;
+}
+
+// 접두에 ? :0, 접미:1
+int CheckState(string s)
+{
+    if(s.front() == '?') return 0;
+    else return 1;
 }
 
 vector<int> solution(vector<string> words, vector<string> queries)
 {
-    map<string, int> ansMap;
-    vector<string> originalQueries = queries;
-    // queries 접두, 접미 분리
-    vector<string> pre, post;
-    for(auto query : queries)
-    {
-        if(query.front() == '?') pre.push_back(query);
-        else post.push_back(query);
-    }
-
-    // words 글자수 별로 분리
-    sort(words.begin(), words.end(), cmp);
-    map<int, vector<string>> wordsDivided;
-    DivideBySize(wordsDivided, words);
-
-    // queries 글자수 별로 분리
-    sort(queries.begin(), queries.end(), cmp);
-    map<int, vector<string>> PreQueriesDivided;
-    map<int, vector<string>> PostQueriesDivided;
-    DivideBySize(PreQueriesDivided, pre);
-    DivideBySize(PostQueriesDivided, post);
-
-//    //////////////////////
-//    cout << "wordsDivided: " << endl;
-//    for(auto x : wordsDivided)
-//    {
-//        for(auto y : x.second) cout << y << ' ';
-//        cout << endl;
-//    } cout << endl;
-//    cout << "PreQueriesDivided: " << endl;
-//    for(auto x : PreQueriesDivided)
-//    {
-//        for(auto y : x.second) cout << y << ' ';
-//        cout << endl;
-//    } cout << endl;
-//    cout << "PostQueriesDivided: " << endl;
-//    for(auto x : PostQueriesDivided)
-//    {
-//        for(auto y : x.second) cout << y << ' ';
-//        cout << endl;
-//    } cout << endl;
-//    //////////////////////
-
-    // 접미
-    for(auto q : PostQueriesDivided)
-    {
-        int size = q.first;
-        // 해당 쿼리 길이 문자열이 words에 존재하지 않음
-        if(wordsDivided.find(size) == wordsDivided.end())
-        {
-            for(auto query : q.second) ansMap[query] = 0;
-            continue;
-        }
-
-        // 해당 쿼리 길이 문자열이 존재
-        TRIE *root = NodeSet();
-        // 트라이에 특정 길이의 문자열 삽입
-        for(auto word : wordsDivided[size]) root->Insert(word.c_str());
-        for(auto query : q.second)
-        {
-            int cnt = root->Find(query.c_str());
-            ansMap[query] = cnt;
-        }
-        memset(NodePool, NULL, sizeof(TRIE) * 1000010);
-    }
-
-    // 접두
-    // 쿼리 문자열 reverse
-    for(auto &q : PreQueriesDivided)
-    {
-        for(auto &query : q.second)
-        {
-            reverse(query.begin(), query.end());
-        }
-    }
-    // words 문자열 reverse
-    for(auto &w : wordsDivided)
-    {
-        for(auto &word : w.second)
-        {
-            reverse(word.begin(), word.end());
-        }
-    }
-
-    for(auto q : PreQueriesDivided)
-    {
-        int size = q.first;
-        // 해당 쿼리 길이 문자열이 words에 존재하지 않음
-        if(wordsDivided.find(size) == wordsDivided.end())
-        {
-            for(auto query : q.second)
-            {
-                reverse(query.begin(), query.end());
-                ansMap[query] = 0;
-            }
-            continue;
-        }
-
-        // 해당 쿼리 길이 문자열이 존재
-        TRIE *root = NodeSet();
-        // 트라이에 특정 길이의 문자열 삽입
-        for(auto word : wordsDivided[size]) root->Insert(word.c_str());
-        for(auto query : q.second)
-        {
-            int cnt = root->Find(query.c_str());
-            reverse(query.begin(), query.end());
-            ansMap[query] = cnt;
-        }
-        memset(NodePool, NULL, sizeof(TRIE) * 1000010);
-    }
-
-
     vector<int> answer;
-    for(auto query : originalQueries) answer.push_back(ansMap[query]);
+    for(int i = 0; i < words.size(); i++)
+    {
+        // 정상 word
+        string s = words[i];
+        int len = s.length();
+        // 해당 문자 크기의 인덱스에 저장된 트라이 없으면 새로 만듦
+        if(Trie[len] == NULL) Trie[len] = NodeSet();
+        Trie[len]->Insert(s.c_str());
+
+        // 뒤집은 word
+        string reverseS = Reverse(s);
+        if(R_Trie[len] == NULL) R_Trie[len] = NodeSet();
+        R_Trie[len]->Insert(reverseS.c_str());
+    }
+
+    map<string, int> map;
+    for(int i = 0; i < queries.size(); i++)
+    {
+        string s = queries[i];
+        if(map.find(s) == map.end())
+        {
+            map[s] = i;
+
+            int len = s.length();
+            int state = CheckState(s);
+
+            // 접두
+            if(state == 1)
+            {
+                // 해당 길이 word 없는 경우
+                if(Trie[len] == NULL) answer.push_back(0);
+                else answer.push_back(Trie[len]->Find(s.c_str()));
+            }
+                // 접미
+            else
+            {
+                string rs = Reverse(s);
+                if(R_Trie[len] == NULL) answer.push_back(0);
+                else answer.push_back(R_Trie[len]->Find(rs.c_str()));
+            }
+        }
+        else answer.push_back(answer[map[s]]);
+    }
 
     return answer;
 }
