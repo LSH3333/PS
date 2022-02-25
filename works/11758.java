@@ -18,7 +18,7 @@ public class Main
         int cal = a - b;
 
         if(cal == 0) System.out.print(0);
-        else if(cal > 9) System.out.print(1);
+        else if(cal > 0) System.out.print(1);
         else System.out.print(-1);
     }
 
