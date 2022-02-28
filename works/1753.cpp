@@ -12,8 +12,8 @@ void Dijkstra(vector<int> &d, vector<pair<int,int>> graph[])
 {
     d[start] = 0;
     // distance, node
-    // 인접 노드 중 가중치 가장 작은 노드부터 방문해야 한다
-    // priority_queue는 first 기준 정렬이므로 distance가 first로 와야함
+    // 인접 노드 중 가중치 가장 작은 노드부터 방문해야 한다 
+    // priority_queue는 first 기준 정렬이므로 distance가 first로 와야함 
     priority_queue<pair<int,int>> pq;
     pq.push({0, start});
 
