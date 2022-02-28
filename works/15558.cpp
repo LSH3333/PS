@@ -1,34 +1,55 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <string>
 using namespace std;
 
 string arr[2];
+bool mark[2][200010];
 int n, k;
-bool success = false;
-int mark[2][100101];
 
-void dfs(int r, int c, int time)
+bool bfs()
 {
-    if(success) return;
+    // r, c, time
+    queue<pair<pair<int,int>, int>> q;
+    q.push({{0, 0}, 0});
 
-    // 위험한 칸
-    if(arr[r][c] == '0') return;
-    // 성공
-    if(c >= n) { success = true; return; }
-    if(mark[r][c] > 4) return;
-    mark[r][c]++;
+    while(!q.empty())
+    {
+        int r = q.front().first.first;
+        int c = q.front().first.second;
+        int time = q.front().second;
+        q.pop();
 
-//    cout << r << ' ' << c << endl;
-    // 반대편 줄로 점프
-    int nr = r == 0 ? 1 : 0;
-    dfs(nr, c+k, time+1);
+        if(c >= n) return true;
+        mark[r][c] = true;
 
-    // 한칸 앞으로
-    dfs(r, c+1, time+1);
+        // 한칸 앞으로 이동
+        // 다음 이동이 조건 통과고 도착이면 바로 트루 리턴
+        if(c+1 >= time+1 && c+1 >= n) return true;
+        if(c+1 >= time+1 && arr[r][c+1] != '0' && !mark[r][c+1])
+        {
+            mark[r][c+1] = true;
+            q.push({{r, c+1}, time+1});
+        }
 
-    // 한칸 뒤로
-    if(c-1 > time+1 && c-1 >= 0) dfs(r, c-1, time+1);
+        // 한칸 뒤로 이동
+        if(c-1 >= time+1 && c-1 >= 0 && arr[r][c-1] != '0' && !mark[r][c-1])
+        {
+            mark[r][c-1] = true;
+            q.push({{r, c-1}, time+1});
+        }
+        // 옆칸 이동
+        int nr = r == 0 ? 1 : 0;
+        if(c+k >= time+1 && c+k >= n) return true;
+        if(c+k >= time+1 && arr[nr][c+k] != '0' && !mark[nr][c+k])
+        {
+            mark[nr][c+k] = true;
+            q.push({{nr, c+k}, time+1});
+        }
+    }
+
+    return false;
 }
 
 int main()
@@ -41,7 +62,6 @@ int main()
         arr[i] = s;
     }
 
-    dfs(0, 0, 0);
+    cout << bfs();
 
-    cout << success;
 }
