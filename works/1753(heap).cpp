@@ -16,14 +16,17 @@ int V,E,start;
 int qSize = 0;
 Node q[MAX];
 
+// 노드 삽입
 void enqueue(Node arr[], Node node)
 {
     int i = 0;
 
+    // heap의 마지막에 노드 삽입
     qSize++;
     i = qSize;
     arr[i] = node;
 
+    // 삽입한 노드를 부모노드와 비교해 heap 속성에 위배될 경우 자리 바꿈 (루트에 도달할때까지 반복)
     while(i > 1 && arr[i/2].distance > arr[i].distance)
     {
         swap(arr[i/2], arr[i]);
@@ -31,16 +34,21 @@ void enqueue(Node arr[], Node node)
     }
 }
 
+// 트리에 heap 속성을 유지시키는 작업
 // 오름차순
 void min_heapify(Node arr[], int i)
 {
+    // 현재 노드와 자식 노드를 비교해서 더 작은 값을 갖는 자식과 교환한다
     int smallest = i;
     int left = 2 * i;
     int right = 2 * i + 1;
 
+    // 현재 노드 i와 자식 노드 크기 비교 (왼쪽 자식과 오른쪽 자식 중 누가 더 큰지)
     if(left <= qSize && arr[left].distance < arr[i].distance) smallest = left;
     if(right <= qSize && arr[right].distance < arr[smallest].distance) smallest = right;
 
+    // 현재 노드보다 자식 노드에 더 큰 값이 있다면 교환하고,
+    // 자식 노드 부터 heapify 진행
     if(smallest != i)
     {
         swap(arr[i], arr[smallest]);
@@ -48,12 +56,16 @@ void min_heapify(Node arr[], int i)
     }
 }
 
+// 큐의 첫 요소 추출
 Node dequeue(Node arr[])
 {
+    // 루트 노드를 추출하고
     Node max = arr[1];
+    // heap의 마지막 노드를 루트에 배치한다
     arr[1] = arr[qSize];
     qSize--;
 
+    // 루트 노드부터 heapify 실행한다
     min_heapify(arr, 1);
 
     return max;
