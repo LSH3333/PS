@@ -24,6 +24,7 @@ int PrintMenu()
     cout << "5. 프로그램 종료" << endl;
     cout << "선택: ";
     int chose; cin >> chose;
+    cout << endl;
     return chose;
 }
 
@@ -61,6 +62,7 @@ void Deposit()
         if(acc.accID == accID)
         {
             acc.balance += balance;
+            break;
         }
     }
 }
@@ -79,6 +81,7 @@ void WithDraw()
         if(acc.accID == accID)
         {
             acc.balance -= balance;
+            break;
         }
     }
 }
