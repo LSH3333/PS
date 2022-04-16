@@ -5,9 +5,10 @@ using namespace std;
 
 int N, L;
 
-
+// maxIdx 기준 오른쪽 탐색, 끝까지 이동 가능하면 참 반환
 bool CalRight(vector<int> &line, int maxIdx)
 {
+    vector<bool> mark(N, false);
     // right
     for(int i = maxIdx; i < N-1;)
     {
@@ -22,24 +23,44 @@ bool CalRight(vector<int> &line, int maxIdx)
         // 다음 레벨이 1차이 나는것 아니면 불가능
         if(nextLevel > curLevel+1 || nextLevel < curLevel-1) return false;
 
-        // 다음 L개에 경사로 건설 가능한지
-        for(int j = i+1; j < i+1+L; j++)
+        // 내리막길
+        if(nextLevel == curLevel-1)
         {
-            if(j >= N) return false; // 범위 벗어나면 불가능
-            // 다음 L개가 같은 레벨아니라면 불가능
-            if(line[j] != nextLevel) return false;
-        }
+            // 다음 L개에 경사로 건설 가능한지
+            for(int j = i+1; j < i+1+L; j++)
+            {
+                if(j >= N) return false; // 범위 벗어나면 불가능
+                // 다음 L개가 같은 레벨 아니라면 불가능
+                if(line[j] != nextLevel) return false;
+            }
 
-        // 경사로 건설 가능, 이동
-        i += L;
+            // 경사로 건설 가능, 이동
+            for(int j = i+1; j < i+1+L; j++) mark[j] = true;
+            i += L;
+        }
+            // 오르막길
+        else
+        {
+            // 현재 칸 포함 이전 L개의 레벨이 같은지, 경사로 있는지 확인
+            bool canBuild = true;
+            for(int j = i; j > i-L; j--)
+            {
+                if(line[j] != curLevel || mark[j])
+                { canBuild = false; break; }
+            }
+            // 같았다면 뒤에서 부터 경사로 설치후 이동
+            if(canBuild) i++;
+            else return false;
+        }
     }
 
-    cout << "RIGHT TRUE" << endl;
     return true;
 }
 
+// maxIdx 기준 왼쪽 탐색
 bool CalLeft(vector<int> &line, int maxIdx)
 {
+    vector<bool> mark(N, false);
     // left
     for(int i = maxIdx; i > 0;)
     {
@@ -54,25 +75,42 @@ bool CalLeft(vector<int> &line, int maxIdx)
         // 다음 레벨이 1차이 나는것 아니면 불가능
         if(nextLevel > curLevel+1 || nextLevel < curLevel-1) return false;
 
-        // 다음 L개에 경사로 건설 가능한지
-        for(int j = i-1; j > i-(1+L); j--)
+        // 내리막길
+        if(nextLevel == curLevel-1)
         {
-            if(j < 0) return false; // 범위 벗어나면 불가능
-            // 다음 L개가 같은 레벨 아니라면 불가능
-            if(line[j] != nextLevel) return false;
+            // 다음 L개에 경사로 건설 가능한지
+            for(int j = i-1; j > i-(1+L); j--)
+            {
+                if(j < 0) return false; // 범위 벗어나면 불가능
+                // 다음 L개가 같은 레벨 아니라면 불가능
+                if(line[j] != nextLevel) return false;
+            }
+
+            // 경사로 건설 가능, 이동
+            i -= L;
+        }
+        else // 오르막길
+        {
+            bool canBuild = true;
+            for(int j = i; j < i+L; j++)
+            {
+                if(line[j] != curLevel || mark[j])
+                { canBuild = false; break; }
+            }
+            if(canBuild) i--;
+            else return false;
         }
 
-        // 경사로 건설 가능, 이동
-        i -= L;
     }
-    cout << "LEFT TRUE" << endl;
+
     return true;
 }
 
+// 행 or 열 받아서 해당하는 행이나 열이 이동가능한 도로인지 판단, 이동 가능하면 참 반환
 bool CalLine(vector<int> &line)
 {
     int maxIdx = max_element(line.begin(), line.end())-line.begin();
-    cout << "maxIdx: " << maxIdx << endl;
+
     // left, right 모두 이동 가능하면 참 반환
     if(CalRight(line, maxIdx) && CalLeft(line, maxIdx)) return true;
     else return false;
@@ -93,25 +131,20 @@ int main()
 
     int answer = 0;
     // row
-    cout << "row" << endl;
     for(int i = 0; i < N; i++)
     {
-        cout << "------ i: " << i << "--------" << endl;
-        if(CalLine(arr[i])) { cout << i << endl; answer++; }
+        if(CalLine(arr[i])) {  answer++; }
     }
     // col
-    cout << endl << endl;
-    cout << "col" << endl;
     for(int j = 0; j < N; j++)
     {
-        cout << "------ j: " << j << "--------" << endl;
         vector<int> line;
         for(int i = 0; i < N; i++)
         {
             line.push_back(arr[i][j]);
         }
-        if(CalLine(line)) { cout << j << endl; answer++; }
+        if(CalLine(line)) {answer++; }
     }
 
-    cout << "answer: " << answer;
+    cout << answer;
 }
