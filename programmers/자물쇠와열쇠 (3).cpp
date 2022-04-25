@@ -20,13 +20,14 @@ vector<vector<int>> Rotate(vector<vector<int>> &key)
     return ret;
 }
 
-bool Cal(int r, int c,vector<vector<int>> lock, const vector<vector<int>> &key)
+bool Cal(int r, int c, const vector<vector<int>> &lock, const vector<vector<int>> &key)
 {
-    for(int i = 0; i < key.size(); i++)
+    vector<vector<int>> tmp = lock;
+    for(int i = r; i < r+key.size(); i++)
     {
-        for(int j = 0; j < key.size(); j++)
+        for(int j = c; j < c+key.size(); j++)
         {
-            lock[r+i][c+j] += key[i][j];
+            tmp[i][j] += key[i-r][j-c];
         }
     }
 
@@ -34,7 +35,7 @@ bool Cal(int r, int c,vector<vector<int>> lock, const vector<vector<int>> &key)
     {
         for(int j = N; j < N*2; j++)
         {
-            if(lock[i][j] != 1) return false;
+            if(tmp[i][j] != 1) return false;
         }
     }
     return true;
@@ -77,11 +78,11 @@ int main()
                     {1,0,0},
                     {0,1,1}
             };
-    vector<vector<int>> lock =
-            {
-                    {1,1,1},
-                    {1,1,0},
-                    {1,0,1}
-            };
-    cout << solution(key, lock);
+
+    vector<vector<int>> key2 = key;
+    for(auto x : key2)
+    {
+        for(auto y : x) cout << y << ' ';
+        cout << endl;
+    }
 }
