@@ -6,22 +6,9 @@ using namespace std;
 int N;
 int answer;
 
-bool IsItSame(const vector<vector<int>> &a, const vector<vector<int>> &b)
-{
-    for(int i = 0; i < N; i++)
-    {
-        for(int j = 0; j < N; j++)
-        {
-            if(a[i][j] != b[i][j]) return false;
-        }
-    }
-    return true;
-}
-
 // 위로 움직임, 움직이기 전과 후과 같으면 return false
-bool MoveUp(vector<vector<int>> &v)
+void MoveUp(vector<vector<int>> &v)
 {
-    vector<vector<int>> copy = v;
     for(int c = 0; c < N; c++)
     {
         vector<int> num;
@@ -34,14 +21,11 @@ bool MoveUp(vector<vector<int>> &v)
         r = 0;
         for(auto x : num) v[r++][c] = x;
     }
-    // 움직이기 전과 후과 동일함
-    if(IsItSame(v, copy)) return false;
-    return true;
+
 }
 
-bool MoveRight(vector<vector<int>> &v)
+void MoveRight(vector<vector<int>> &v)
 {
-    vector<vector<int>> copy = v;
     for(int r = 0; r < N; r++)
     {
         vector<int> num;
@@ -53,13 +37,10 @@ bool MoveRight(vector<vector<int>> &v)
         c = N-1;
         for(auto x : num) v[r][c--] = x;
     }
-    if(IsItSame(v, copy)) return false;
-    return true;
 }
 
-bool MoveDown(vector<vector<int>> &v)
+void MoveDown(vector<vector<int>> &v)
 {
-    vector<vector<int>> copy = v;
     for(int c = 0; c < N; c++)
     {
         vector<int> num;
@@ -72,13 +53,10 @@ bool MoveDown(vector<vector<int>> &v)
         r = N-1;
         for(auto x : num) v[r--][c] = x;
     }
-    if(IsItSame(v, copy)) return false;
-    return true;
 }
 
-bool MoveLeft(vector<vector<int>> &v)
+void MoveLeft(vector<vector<int>> &v)
 {
-    vector<vector<int>> copy = v;
     for(int r = 0; r < N; r++)
     {
         vector<int> num;
@@ -90,87 +68,84 @@ bool MoveLeft(vector<vector<int>> &v)
         c = 0;
         for(auto x : num) v[r][c++] = x;
     }
-    if(IsItSame(v, copy)) return false;
-    return true;
 }
 //////////
 
-bool Up(vector<vector<int>> &v)
+
+void Up(vector<vector<int>> &v)
 {
-    if(MoveUp(v)) return false;
+    MoveUp(v);
     // 같은 숫자 합침
     for(int c = 0; c < N; c++)
     {
         int r;
         for(r = 0; r < N-1; r++)
         {
-            if(v[r][c] == v[r+1][c]) { v[r][c] = v[r][c]*2; v[r+1][c] = 0; answer = max(answer, v[r][c]); }
+            if(v[r][c] == v[r+1][c]) { v[r][c] = v[r][c]*2; v[r+1][c] = 0;  }
         }
     }
     MoveUp(v);
-    return true;
 }
 
-bool Right(vector<vector<int>> &v)
+void Right(vector<vector<int>> &v)
 {
-    if(MoveRight(v)) return false;
+    MoveRight(v);
+
     for(int r = 0; r < N; r++)
     {
         for(int c = N-1; c >= 0; c--)
         {
-            if(v[r][c] == v[r][c-1]) { v[r][c] = v[r][c]*2; v[r][c-1] = 0; answer = max(answer, v[r][c]);}
+            if(v[r][c] == v[r][c-1]) { v[r][c] = v[r][c]*2; v[r][c-1] = 0; }
         }
     }
     MoveRight(v);
-    return true;
 }
 
-bool Down(vector<vector<int>> &v)
+void Down(vector<vector<int>> &v)
 {
-    if(MoveDown(v)) return false;
+    MoveDown(v);
     for(int c = 0; c < N; c++)
     {
         int r;
         for(r = N-1; r > 0; r--)
         {
-            if(v[r][c] == v[r-1][c]) { v[r][c] = v[r][c]*2; v[r-1][c] = 0; answer = max(answer, v[r][c]);}
+            if(v[r][c] == v[r-1][c]) { v[r][c] = v[r][c]*2; v[r-1][c] = 0; }
         }
     }
     MoveDown(v);
-    return true;
 }
 
-bool Left(vector<vector<int>> &v)
+void Left(vector<vector<int>> &v)
 {
-    if(MoveLeft(v)) return false;
+    MoveLeft(v);
     for(int r = 0; r < N; r++)
     {
         for(int c = 0; c < N-1; c++)
         {
-            if(v[r][c] == v[r][c+1]) { v[r][c] = v[r][c]*2; v[r][c+1] = 0; answer = max(answer, v[r][c]);}
+            if(v[r][c] == v[r][c+1]) { v[r][c] = v[r][c]*2; v[r][c+1] = 0; }
         }
     }
     MoveLeft(v);
-    return true;
 }
 
 
 
 // dir: 0 up, 1 right, 2 down, 3 left
-bool Move(vector<vector<int>> &v, int dir)
+void Move(vector<vector<int>> &v, int dir)
 {
     switch(dir)
     {
         case 0:
-            if(Up(v)) return false;
+            Up(v); break;
         case 1:
-            if(Right(v)) return false; break;
+            Right(v); break;
         case 2:
-            if(Down(v)) return false; break;
+            Down(v); break;
         case 3:
-            if(Left(v)) return false; break;
+            Left(v); break;
+        default:
+            break;
     }
-    return true;
 }
 
 void Print(vector<vector<int>> &v)
@@ -184,20 +159,28 @@ void Print(vector<vector<int>> &v)
     }cout << endl;
 }
 
-void dfs(vector<vector<int>> &v)
+void dfs(vector<vector<int>> &v, int depth)
 {
-    for(int dir = 0; dir < 4; dir++)
+    if(depth == 5)
     {
-        
+        for(int i = 0; i < N; i++)
+        {
+            for(int j = 0; j < N; j++)
+            {
+                answer = max(answer, v[i][j]);
+            }
+        }
+        return;
     }
 
     for(int dir = 0; dir < 4; dir++)
     {
         vector<vector<int>> copy = v;
-        // 특정 방향으로 움직였을때 이동 있을때만
-        if(!Move(v, dir)) dfs(v);
+        Move(v, dir);
+        dfs(v, depth+1);
         v = copy;
     }
+
 }
 
 int main()
@@ -211,5 +194,8 @@ int main()
             cin >> v[i][j];
         }
     }
+
+    dfs(v, 0);
+    cout << answer;
 
 }
