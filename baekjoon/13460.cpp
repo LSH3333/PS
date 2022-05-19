@@ -4,6 +4,7 @@ using namespace std;
 
 int N, M;
 char board[11][11];
+int answer = 100;
 
 class Cord
 {
@@ -241,6 +242,61 @@ int Left()
     if(!redGoal && blueGoal) return -1; // 파랑만 골
     return 1; // 빨강만 골
 }
+//////////////////////
+
+void Memorize(char _board[][11])
+{
+    for(int i = 0; i < N; i++)
+    {
+        for(int j = 0; j < M; j++)
+        {
+            _board[i][j] = board[i][j];
+        }
+    }
+}
+
+void Repair(char _board[][11])
+{
+    for(int i = 0; i < N; i++)
+    {
+        for(int j = 0; j < M; j++)
+        {
+            board[i][j] = _board[i][j];
+        }
+    }
+}
+
+void dfs(int depth)
+{
+    if(depth == 10)
+    {
+        return;
+    }
+
+    for(int dir = 0; dir < 4; dir++)
+    {
+        // 수행 전에 기억
+        pair<int,int> _red = {red.r, red.c};
+        pair<int,int> _blue = {blue.r, blue.c};
+        char _board[11][11];
+        Memorize(_board);
+
+        int res;
+        if(dir == 0) res = Up();
+        else if(dir == 1) res = Right();
+        else if(dir == 2) res = Down();
+        else res = Left();
+
+        
+        if(res == 1) answer = min(answer, depth);
+        dfs(depth+1);
+
+        // 복구
+        red.r = _red.first; red.c = _red.second;
+        blue.r = _blue.first; blue.c = _blue.second;
+        Repair(_board);
+    }
+}
 
 int main()
 {
@@ -258,10 +314,8 @@ int main()
         }
     }
 
-//    cout << red.r << ' ' << red.c << endl;
-//    cout << blue.r << ' ' << blue.c << endl;
-    Print();
-    Left();
-    Print();
+    dfs(0);
 
+    if(answer == 100) cout << -1;
+    else cout << answer+1;
 }
