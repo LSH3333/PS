@@ -94,16 +94,17 @@ int EatFish(Shark &shark, vector<Fish> &loc, int r, int c, vector<vector<int>> &
     return ate;
 }
 
-void dfs(Shark &shark, vector<Fish> &loc, int ate, vector<vector<int>> &board)
+void dfs(Shark shark, vector<Fish> &loc, int ate, vector<vector<int>> &board)
 {
     answer = max(answer, ate);
     // back up
-    Shark restoreShark = shark;
     vector<vector<int>> resBoard = board;
     vector<Fish> restoreLoc = loc;
 
     cout << "ate: " << ate << endl;
     Print(loc, shark, board);
+
+    MoveAllFishes(loc, shark, board);
 
     int r = shark.r, c = shark.c;
     for(int i = 0; i <= 3; i++)
@@ -114,13 +115,15 @@ void dfs(Shark &shark, vector<Fish> &loc, int ate, vector<vector<int>> &board)
         if(board[r][c] == 0) continue;
 
         int amount = EatFish(shark, loc, r, c, board);
-        MoveAllFishes(loc, shark, board);
+
         dfs(shark, loc, ate+amount, board);
 
-        shark = restoreShark;
         resBoard = board;
         loc = restoreLoc;
     }
+
+    resBoard = board;
+    loc = restoreLoc;
 }
 
 int main()
@@ -147,7 +150,7 @@ int main()
     loc[board[0][0]] = {-1,-1,-1,-1};
     board[0][0] = -2;
 
-    MoveAllFishes(loc, shark, board);
+
     Print(loc, shark, board);
 
     dfs(shark, loc, firstFish, board);
