@@ -66,7 +66,7 @@ vector<int> CalDir()
 vector<pair<pair<int,int>,int>> Cal(int r, int c, int dir)
 {
     int dr[4], dc[4];
-    if(dir == 0) // left
+    if(dir == 0) // lef
     {
         // up, right, down, left
         dr[0] = -1; dr[1] = 0; dr[2] = 1; dr[3] = 0;
@@ -126,6 +126,7 @@ vector<pair<pair<int,int>,int>> Cal(int r, int c, int dir)
     return pos;
 }
 
+
 int main()
 {
     ios::sync_with_stdio(false); cin.tie(NULL);
@@ -141,39 +142,38 @@ int main()
     vector<pair<int,int>> paths = CalPos(); // 좌표
     vector<int> directions = CalDir(); // 방향
 
-//    for(int i = 0; i < N*N; i++)
-//    {
-//        cout << paths[i].first << ',' << paths[i].second << ": ";
-//        cout << directions[i] << endl;
-//    }
-
     int answer = 0;
     for(int i = 0; i < N*N; i++)
     {
         vector<pair<pair<int,int>,int>> pos = Cal(paths[i].first, paths[i].second, directions[i]);
+
         int aR = pos[0].first.first, aC = pos[0].first.second; // alpha
         int yR = pos[1].first.first, yC = pos[1].first.second; // y
         int sand = A[yR][yC]; // y좌표의 모래양
-        int movedSand = 0; // 이동한 모래 양
 
         for(int j = 2; j < pos.size(); j++)
         {
             int r = pos[j].first.first; int c = pos[j].first.second;
-            int perc = pos[j].second;
-            int move = (sand / 100 * perc);
+            double perc = pos[j].second;
+            double d_move = ((double)sand / 100.0 * perc);
+            int move = (int)d_move;
 
-            if(r < 1 || r > N || c < 1 || c > N) // 범위 벗어남
-            {
-                answer += move;
-            }
-            else
+            // 범위 내
+            if(r > 0 && r <= N && c > 0 && c <= N)
             {
                 A[r][c] += move;
             }
-            movedSand += move;
+            else // 벙위 밖
+            {
+                answer += move;
+            }
+            A[yR][yC] -= move;
         }
 
-        A[aR][aC] += sand - movedSand;
+        // y에 남은 모래는 alpha로 이동
+        if(aR > 0 && aR <= N && aC > 0 && aC <= N) A[aR][aC] += A[yR][yC];
+        else answer += A[yR][yC];
+        A[yR][yC] = 0;
     }
 
     cout << answer;
