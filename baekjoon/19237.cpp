@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <queue>
 using namespace std;
 
 struct Shark
@@ -10,15 +9,11 @@ struct Shark
     int dir;
     bool alive;
     vector<vector<int>> dirPref; // 방향 우선순위
-    queue<pair<int,int>> smell; // 냄새 좌표
 };
 
 int N, M, K;
-vector<int> board[22][22];
-// i번째 상어의 냄새 좌표
-int smellBoard[401][22][22];
-// 해당 좌표에 냄새 상어 번호, 몇 초후 사라지는지
-pair<int,int> isSmell[22][22];
+vector<int> board[30][30];
+pair<int,int> smellBoard[30][30];
 // 살아 있는 상어 수
 int LIVE;
 
@@ -26,58 +21,7 @@ int LIVE;
 int dr[] = {-1, 1, 0, 0};
 int dc[] = {0, 0, -1, 1};
 
-void PrintSharks(const vector<Shark> &sharks)
-{
-    cout << endl;
-    for (int i = 1; i <= M; i++)
-    {
-        cout << "shark " << i << ": " << endl;
-        cout << "r,c: " << sharks[i].r << ',' << sharks[i].c << endl;
-        cout << "dir: " << sharks[i].dir << endl;
-        cout << "alive: " << sharks[i].alive << endl;
-        cout << "smells: " << sharks[i].smell.size() << endl;
-        for(int r = 1; r <= N; r++)
-        {
-            for(int c = 1; c <= N; c++)
-            {
-                cout << smellBoard[i][r][c] << ' ';
-            } cout << endl;
-        }
-        cout << endl;
-    }
-}
-
-// n번 상어 위치, 방향 정보 업데이트
-void UpdateShark(int n, pair<int,int> pos, int d, vector<Shark> &sharks)
-{
-    // 해당 상어 정보 갱신
-    sharks[n].r = pos.first;
-    sharks[n].c = pos.second;
-    sharks[n].dir = d;
-    board[pos.first][pos.second].push_back(n);
-}
-
-// 냄새 정보들 업데이트
-void UpdateSmell()
-{
-    for(int i = 1; i <= N; i++)
-    {
-        for(int j = 1; j <= N; j++)
-        {
-            if(isSmell[i][j].first == 0) continue;
-            // 초 줄임
-            isSmell[i][j].second--;
-            // 0초 됐다면 냄새 지움
-            if(isSmell[i][j].second == 0)
-            {
-                isSmell[i][j].first = 0;
-                smellBoard[isSmell[i][j].first][i][j] = 0;
-            }
-        }
-    }
-}
-
-// n번 상어 움직일 예정인 좌표, 방향 리턴
+// n번 상어, 움직일 예정인 좌표, 방향 리턴
 vector<int> MoveShark(int n, vector<Shark> &sharks)
 {
     Shark shark = sharks[n];
@@ -89,9 +33,9 @@ vector<int> MoveShark(int n, vector<Shark> &sharks)
         int nr = r + dr[d];
         int nc = c + dc[d];
         if(nr < 1 || nr > N || nc < 1 || nc > N) continue;
-        if(isSmell[nr][nc].first > 0) continue; // 해당 좌표 냄새 있음
+        if(smellBoard[nr][nc].first > 0) continue; // 해당 좌표 냄새 있음
         // found position
-        return {nr, nc, d};
+        return {n, nr, nc, d};
     }
     // 빈 공간 없으면 자신의 냄새가 있는 방향으로
     for(int i = 0; i < 4; i++)
@@ -100,22 +44,35 @@ vector<int> MoveShark(int n, vector<Shark> &sharks)
         int nr = r + dr[d];
         int nc = c + dc[d];
         if(nr < 1 || nr > N || nc < 1 || nc > N) continue;
-        if(smellBoard[n][nr][nc] <= 0) continue; // 내 냄새 없는 곳 continue
+        if(smellBoard[nr][nc].first != n) continue; // 내 냄새 없는 곳 continue
         // found pos
-        return {nr, nc, d};
+        return {n, nr, nc, d};
     }
 
-    return {-1};
+    // 이동 가능한 곳이 없는 경우 valid=0 리턴
+    return {n,r,c,dir};
+}
+
+void UpdateSharkPos(vector<Shark> &sharks, vector<int> next)
+{
+    int n = next[0], r = next[1], c = next[2], d = next[3];
+    board[r][c].push_back(n);
+    sharks[n].r = r;
+    sharks[n].c = c;
+    sharks[n].dir = d;
 }
 
 void ClearBoard()
 {
     for(int i = 1; i <= N; i++)
+    {
         for(int j = 1; j <= N; j++)
+        {
             board[i][j].clear();
+        }
+    }
 }
 
-// 같은 공간에 존재하는 상어들 확인 후 죽임
 void CheckDead(vector<Shark> &sharks)
 {
     // 같은 공간의 상어들 확인
@@ -135,6 +92,25 @@ void CheckDead(vector<Shark> &sharks)
     }
 }
 
+// 냄새 정보들 업데이트
+void UpdateSmell()
+{
+    for(int i = 1; i <= N; i++)
+    {
+        for(int j = 1; j <= N; j++)
+        {
+            if(smellBoard[i][j].first == 0) continue;
+            // 초 줄임
+            smellBoard[i][j].second--;
+            // 0초 됐다면 냄새 지움
+            if(smellBoard[i][j].second == 0)
+            {
+                smellBoard[i][j].first = 0;
+            }
+        }
+    }
+}
+
 void MoveSharks(vector<Shark> &sharks)
 {
     ClearBoard();
@@ -142,38 +118,37 @@ void MoveSharks(vector<Shark> &sharks)
     vector<vector<int>> nexts;
     for(int i = 1; i <= M; i++)
     {
-        if(!sharks[i].alive) continue; // 죽은 상어 제외
-        vector<int> next = MoveShark(i, sharks);
-        nexts.push_back(next);
+        if(!sharks[i].alive) continue;
+        nexts.push_back(MoveShark(i, sharks));
     }
 
-    // 위치, 방향 정보 업데이트
-    for(int i = 0; i < nexts.size(); i++)
+    // 상어 좌표 갱신
+    for(auto &x : nexts)
     {
-        int r = nexts[i][0], c = nexts[i][1], d = nexts[i][2];
-        UpdateShark(i+1, {r,c}, d, sharks);
+        UpdateSharkPos(sharks, x);
     }
 
-    // 겹치는 상어 제거
+    // 겹치는 상어 확인
     CheckDead(sharks);
 
-    // 이전 냄새듣 시간 줄임
+    // 지난 냄새 처리
     UpdateSmell();
 
-    // 살아있는 상어들 위치에 냄새 기록
+    // 새로운 위치에 냄새 남김
     for(int i = 1; i <= M; i++)
     {
         if(!sharks[i].alive) continue;
-        isSmell[sharks[i].r][sharks[i].c] = {i, K};
+        smellBoard[sharks[i].r][sharks[i].c].first = i;
+        smellBoard[sharks[i].r][sharks[i].c].second = K;
     }
+
 
 }
 
 int main()
 {
-//    ios::sync_with_stdio(false); cin.tie(NULL);
     cin >> N >> M >> K;
-    vector<Shark> sharks(M+1);
+    vector<Shark> sharks(410);
     LIVE = M;
     for(int i = 1; i <= N; i++)
     {
@@ -185,8 +160,8 @@ int main()
                 board[i][j].push_back(shark);
                 sharks[shark].r = i;
                 sharks[shark].c = j;
-                isSmell[i][j].first = shark;
-                isSmell[i][j].second = K;
+                smellBoard[i][j].first = shark;
+                smellBoard[i][j].second = K;
             }
         }
     }
@@ -212,31 +187,13 @@ int main()
         }
     }
 
-
-
-//    MoveSharks(sharks);
-//    PrintSharks(sharks);
-//    cout << "LIVE: " << LIVE << endl;
-//    cout << "-----------" << endl;
-//
-//    MoveSharks(sharks);
-//    PrintSharks(sharks);
-//    cout << "LIVE: " << LIVE << endl;
-//    cout << "-----------" << endl;
-
-
-    // print answer
-    for(int sec = 1; sec < 1000; sec++)
+    int t;
+    for(t = 1; t <= 1000; t++)
     {
-        cout << "SEC: " << sec << endl;
         MoveSharks(sharks);
-        cout << LIVE << endl;
-        PrintSharks(sharks);
-        cout << "---------------------\n";
         if(LIVE == 1)
         {
-            cout << sec;
-            return 0;
+            cout << t; return 0;
         }
     }
     cout << -1;
