@@ -4,59 +4,59 @@
 using namespace std;
 
 int R, C;
-int cnt;
-
-void Print(vector<vector<int>> &board)
-{
-    for(int i = 1; i <= R; i++)
-    {
-        for(int j = 1; j <= C; j++)
-        {
-            printf("%2d ", board[i][j]);
-        } cout << endl;
-    }
-}
-
-vector<vector<int>> road[8] =
-        {
-                {},
-                {{}, {6,7,3,4}, {5,7,2,3}, {}}, // '1'
-                {{5,7,1,4}, {6,7,3,4},{},{}}, // '2'
-                {{5,7,1,4}, {}, {}, {6,7,1,2}}, // '3'
-                {{}, {}, {5,7,2,3}, {6,7,1,2}}, // '4'
-                {{5,7,1,4}, {}, {5,7,2,3}, {}}, // '|',
-                {{}, {6,7,3,4}, {}, {6,7,1,2}}, // '-'
-                {{5,7,1,4}, {6,7,3,4}, {5,7,2,3}, {6,7,1,2}}
-        };
+int totalPipes;
 
 int dr[] = {-1, 0, 1, 0};
 int dc[] = {0, 1, 0 ,-1};
-vector<pair<int,int>> v;
+
+#define UP {5,7,1,4}
+#define RIGHT {6,7,3,4}
+#define DOWN {5,7,2,3}
+#define LEFT {6,7,1,2}
+
+
+
+vector<vector<int>> roads[8] =
+        {
+                {},
+                {{}, RIGHT, DOWN, {}},
+                {UP, RIGHT, {}, {}},
+                {UP, {}, {}, LEFT},
+                {{}, {}, DOWN, LEFT},
+                {UP, {}, DOWN, {}},
+                {{}, RIGHT, {}, LEFT},
+                {UP, RIGHT, DOWN, LEFT}
+        };
+
+
+int missingR, missingC, missingDir;
 
 // 현재 블록 cur과 방향 dir를 토대로 다음 블록 next로 이동 가능한지 판단
 bool Check(int cur, int dir, int next)
 {
-    if(road[cur][dir].empty()) return false;
-    for(int i = 0; i < road[cur][dir].size(); i++)
+    if(roads[cur][dir].empty()) return false;
+    for(int i = 0; i < roads[cur][dir].size(); i++)
     {
-        if(road[cur][dir][i] == next) return true;
+        if(roads[cur][dir][i] == next) return true;
     }
     return false;
 }
 
-bool CheckAllVisited(const vector<vector<int>> &board, const vector<vector<int>> &mark)
+int CountPipe(const  vector<vector<int>> &mark, const vector<vector<int>> &board)
 {
-    for(auto x : v)
+    int cnt = 0;
+    for(int r = 1; r <= R; r++)
     {
-        int r = x.first; int c = x.second;
-        if(board[r][c] == 7 && mark[r][c] < 2) return false;
-        else if(board[r][c] != 7 && mark[r][c] == 0) return false;
+        for(int c = 1; c <= C; c++)
+        {
+            if(board[r][c] == 0 || board[r][c] == -2 || board[r][c] == -1) continue;
+            if(mark[r][c]) cnt++;
+        }
     }
-    return true;
+    return cnt;
 }
 
-// Z 방문 가능하면 return true else false
-bool bfs(int MR, int MC, int goalR, int goalC, const vector<vector<int>> &board)
+bool bfs(int MR, int MC, const vector<vector<int>> &board)
 {
     vector<vector<int>> mark(R+1, vector<int>(C+1, 0));
     // {r,c},dir
@@ -70,35 +70,24 @@ bool bfs(int MR, int MC, int goalR, int goalC, const vector<vector<int>> &board)
         int c = q.front().first.second;
         int dir = q.front().second;
         q.pop();
-        cout << r << ',' << c << "   ";
-        // 현재 블록이 십자 블록이라면
-        if(board[r][c] == 7)
+
+        missingR = r; missingC = c; missingDir = dir;
+
+        if(CountPipe(mark,board) == totalPipes)
         {
-            // 같은 방향으로만 이동 가능
-            int nr = r + dr[dir];
-            int nc = c + dc[dir];
-
-            if(nr < 1 || nr > R || nc < 1 || nc > C) continue;
-            if(board[nr][nc] == 0) continue;
-            // 다음 블록이 십자 블록이고 2번 방문했다면 이동 불가
-            if(board[nr][nc] == 7 && mark[nr][nc] >= 2) continue;
-            // 십자 블록 이외에는 단 한번만 방문 가능
-            if(board[nr][nc] != 7 && mark[nr][nc] > 0) continue;
-            // 다음 블록과 안맞음
-            if(!Check(board[r][c], dir, board[nr][nc])) continue;
-            if(nr == goalR && nc == goalC) // 목적지
+            for(int i = 0; i < roads[board[r][c]].size(); i++)
             {
-                cnt--;
-                if(cnt == 0 && CheckAllVisited(board,mark)) return true;
+                if(roads[board[r][c]][i].empty()) continue;
+                int nr = r + dr[i];
+                int nc = c + dc[i];
+                if(board[nr][nc] == -2) return true;
             }
-
-            mark[nr][nc]++;
-            q.push({{nr,nc}, dir});
-            continue;
         }
 
+        // 이동
         for(int i = 0; i < 4; i++)
         {
+            if(board[r][c] == 7 && i != dir) continue; // 현재 십자블록이라면 같은 방향으로만 이동 가능
             if(dir != -1 && i == (dir+2)%4) continue; // 왔던 방향으로는 가지 않음
             int nr = r + dr[i];
             int nc = c + dc[i];
@@ -110,18 +99,23 @@ bool bfs(int MR, int MC, int goalR, int goalC, const vector<vector<int>> &board)
             // 십자 블록 이외에는 단 한번만 방문 가능
             if(board[nr][nc] != 7 && mark[nr][nc] > 0) continue;
             // 다음 블록과 안맞음
-            if(board[r][c] != -1 && !Check(board[r][c], i, board[nr][nc])) continue;
-            if(nr == goalR && nc == goalC) // 목적지
-            {
-                cnt--;
-                if(cnt == 0 && CheckAllVisited(board, mark)) return true;
-            }
+            if((board[r][c] > 0) && !Check(board[r][c], i, board[nr][nc])) continue;
 
             mark[nr][nc]++;
             q.push({{nr,nc}, i});
             break;
         }
-    } cout<<endl;
+    }
+
+    for(int i = 0; i < roads[board[missingR][missingC]].size(); i++)
+    {
+        if(roads[board[missingR][missingC]][i].empty()) continue;
+        int nr = missingR + dr[i];
+        int nc = missingC + dc[i];
+        if(nr < 1 || nr > R || nc < 1 || nc > C) continue;
+        if(board[nr][nc] != 0) continue;
+        missingR = nr; missingC = nc;
+    }
     return false;
 }
 
@@ -137,56 +131,40 @@ int main()
         for(int j = 1; j <= C; j++)
         {
             char c; cin >> c;
+            if(c != '.') totalPipes++;
             if(c == '.') board[i][j] = 0;
-            else if(c == '|') { board[i][j] = 5; v.push_back({i,j}); }
-            else if(c == '-') { board[i][j] = 6; v.push_back({i,j});}
-            else if(c == '+') { board[i][j] = 7; v.push_back({i,j});}
+            else if(c == '|') { board[i][j] = 5; }
+            else if(c == '-') { board[i][j] = 6; }
+            else if(c == '+') { board[i][j] = 7; }
             else if(c == 'M') { board[i][j] = -1; MR = i; MC = j; }
             else if(c == 'Z') { board[i][j] = -2; ZR = i; ZC = j; }
-            else { board[i][j] = c-'0'; v.push_back({i,j});}
+            else { board[i][j] = c-'0'; }
         }
+    }
+    totalPipes = totalPipes -2 + 1; // M,Z 제외, 사라진 파이프 추가
+
+
+    // 사라진 지점 찾음
+    bfs(MR, MC, board);
+    int mR = missingR, mC = missingC;
+
+    for(int i = 1; i <= 7; i++)
+    {
+        board[mR][mC] = i;
+
+        if(bfs(MR, MC, board))
+        {
+            char tmp;
+            if(i == 5) tmp = '|';
+            else if(i == 6) tmp = '-';
+            else if(i == 7) tmp = '+';
+            else tmp = (char)(i+'0');
+            cout << mR << ' ' << mC << ' ' << tmp;
+            return 0;
+        }
+        board[mR][mC] = 0;
     }
 
-    int goalR, goalC;
-    // Z의 인접 블록 찾음
-    for(int i = 0; i < 4; i++)
-    {
-        int nr = ZR + dr[i];
-        int nc = ZC + dc[i];
-        if(nr < 1 || nr > R || nc < 1 || nc > C) continue;
-        if(board[nr][nc] == 0) continue;
-        if(Check(7, i, board[nr][nc]))
-        {
-            goalR = nr; goalC = nc;
-            if(board[nr][nc] == 7) cnt = 2; else cnt = 1;
-            break;
-        }
-    }
-
-    for(int r = 1; r <= R; r++)
-    {
-        for(int c = 1; c <= C; c++)
-        {
-            if(board[r][c] != 0) continue;
-            cout << "---------" << r << ',' << c << endl;
-            for(int i = 1; i <= 7; i++)
-            {
-                board[r][c] = i; // 도로 건설
-                cout << "road: " << i << endl;
-                if(bfs(MR, MC, goalR, goalC, board))
-                {
-                    char tmp;
-                    if(i == 5) tmp = '|';
-                    else if(i == 6) tmp = '-';
-                    else if(i == 7) tmp = '+';
-                    else tmp = (char)(i+'0');
-                    cout << r << ' ' << c << ' ' << tmp;
-                    return 0;
-                }
-                board[r][c] = 0; // 복구
-            }
-        }
-    }
 
 
 }
