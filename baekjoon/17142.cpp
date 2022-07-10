@@ -6,54 +6,37 @@ using namespace std;
 int N, M;
 int original_board[51][51];
 int total = 0; // 최종적으로 바이러스가 있어야 하는 칸의 갯수
+int answer = 2000000000;
 
-#define VIRUS (-3)
-#define WALL (-2)
-#define EMPTY (-1)
+#define VIRUS 2
+#define WALL 1
+#define EMPTY 0
 
 int dr[] = {-1, 0, 1, 0};
 int dc[] = {0, 1, 0, -1};
 
 
-
 // 정한 M개의 위치를 활성 바이러스로 바꿈
+// 모든 곳 바이러스 감염 완료면 시간 리턴, 아니면 -1 리턴
 int StartVirus(const vector<pair<int,int>> &selectedVirus)
 {
     // 보드 복사해옴
-    vector<vector<int>> board(N, vector<int>(N));
-    for(int i = 0; i < N; i++)
-    {
-        for(int j = 0; j < N; j++)
-        {
-            board[i][j] = original_board[i][j];
-        }
-    }
+    vector<vector<int>> board(N, vector<int>(N, 0));
+    vector<vector<bool>> mark(N, vector<bool>(N, false));
 
     // 활성 바이러스 놓음
     queue<pair<int,int>> q;
     for(const auto &x : selectedVirus)
     {
-        board[x.first][x.second] = 0; // 0초 시작
+        mark[x.first][x.second] = true;
         q.push({x.first, x.second});
     }
-
     int cnt = 0;
     int maxTime = 0;
     while(!q.empty())
     {
-        for(int i = 0; i < N; i++)
-        {
-            for(int j = 0; j < N; j++)
-            {
-                cout << board[i][j] << ' ';
-            } cout<<endl;
-        }cout<<endl;
-
-        cnt++;
         int r = q.front().first;
         int c = q.front().second;
-        int time = board[r][c];
-        maxTime = max(maxTime, time);
         q.pop();
 
         for(int i = 0; i < 4; i++)
@@ -61,18 +44,19 @@ int StartVirus(const vector<pair<int,int>> &selectedVirus)
             int nr = r + dr[i];
             int nc = c + dc[i];
             if(nr < 0 || nr >= N || nc < 0 || nc >= N) continue;
-            if(board[nr][nc] >= 0) continue; // 이미 바이러스 존재
-            if(board[nr][nc] == WALL) continue;
-            board[nr][nc] = time + 1;
+            if(mark[nr][nc] || original_board[nr][nc] == WALL) continue;
+            mark[nr][nc] = true;
             q.push({nr, nc});
+            board[nr][nc] = board[r][c] + 1;
+            if(original_board[nr][nc] != VIRUS)
+            {
+                maxTime = max(maxTime, board[nr][nc]);
+                cnt++;
+            }
         }
     }
 
-    // 모든 곳 바이러스 감염 완료됨
-    if(cnt == total)
-    {
-        return maxTime;
-    }
+    if(cnt == total) return maxTime;
     else return -1;
 }
 
@@ -82,13 +66,9 @@ void dfs(int idx, int depth, vector<pair<int,int>> &virusPos, vector<pair<int,in
     // M개 찾음
     if(depth == M)
     {
-        for(auto x : selectedVirus)
-        {
-            cout << "(" << x.first << ',' << x.second << ") ";
-        } cout << endl;
-
         int res = StartVirus(selectedVirus);
-        cout << "res: " << res << endl;
+        if(res != -1) answer = min(answer, res);
+
         return;
     }
 
@@ -108,6 +88,7 @@ int main()
 {
     ios::sync_with_stdio(false); cin.tie(NULL);
     vector<pair<int,int>> virusPos; // 바이러스 위치 기록
+
     cin >> N >> M;
     for(int i = 0; i < N; i++)
     {
@@ -118,22 +99,16 @@ int main()
             else if(n == 1) original_board[i][j] = WALL; // 벽
             else
             {
-                total++;
-                original_board[i][j] = EMPTY; // 바이러스 최초 위치
+                original_board[i][j] = VIRUS; // 바이러스 최초 위치
                 virusPos.push_back({i,j});
             }
         }
     }
 
-    for(int i = 0; i < N; i++)
-    {
-        for(int j = 0; j < N; j++)
-        {
-            cout << original_board[i][j] << ' ';
-        } cout << endl;
-    } cout << endl;
-
     vector<pair<int,int>> selectedVirus;
     vector<bool> mark(M, false);
     dfs(0, 0, virusPos, selectedVirus, mark);
+
+    if(answer == 2000000000) cout << -1;
+    else cout << answer;
 }
