@@ -16,7 +16,6 @@ int Try(vector<pair<int,int>> &v)
     C = max(v[0].second, max(v[1].second, v[2].second));
     answer = min(answer, R*C);
 
-    R = v[0].first + v[1].first;
     R = v[1].first < v[2].first ? v[0].first+v[2].first : v[0].first+v[1].first;
     C = v[0].second <= v[1].second+v[2].second ? v[1].second+v[2].second : v[0].second;
     answer = min(answer, R*C);
