@@ -63,13 +63,13 @@ void MoveDice(Dice &dice)
     switch(dice.dir)
     {
         case U:
-            newDiceNum = {0, dice.diceNum[2], dice.diceNum[6], dice.diceNum[3], dice.diceNum[4], dice.diceNum[1], dice.diceNum[5] };
+            newDiceNum = {0, dice.diceNum[5], dice.diceNum[1], dice.diceNum[3], dice.diceNum[4], dice.diceNum[6], dice.diceNum[2] };
             break;
         case R:
             newDiceNum = {0, dice.diceNum[4], dice.diceNum[2], dice.diceNum[1], dice.diceNum[6], dice.diceNum[5], dice.diceNum[3] };
             break;
         case D:
-            newDiceNum = {0, dice.diceNum[5], dice.diceNum[1], dice.diceNum[3], dice.diceNum[4], dice.diceNum[6], dice.diceNum[2] };
+            newDiceNum = {0, dice.diceNum[2], dice.diceNum[6], dice.diceNum[3], dice.diceNum[4], dice.diceNum[1], dice.diceNum[5] };
             break;
         case L:
             newDiceNum = {0, dice.diceNum[3], dice.diceNum[2], dice.diceNum[6], dice.diceNum[1], dice.diceNum[5], dice.diceNum[4] };
@@ -149,9 +149,6 @@ int main()
     while(K--)
     {
         MoveOnce(dice, score);
-        cout << "score: " << score << endl;
-        cout << dice.dir << ' ' << dice.r << ',' << dice.c << endl;
-        for(auto x : dice.diceNum) cout << x << ' '; cout << endl << endl;
     }
     cout << score;
 }
