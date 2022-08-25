@@ -1,0 +1,10 @@
+import 'dart:io';
+
+void main()
+{
+    var v = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    int S = v.elementAt(0), T = v.elementAt(1), D = v.elementAt(2);
+    int time = D ~/ (S * 2);
+    int F = time * T;
+    print(F);
+}

@@ -1,0 +1,11 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var v = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    int a = v.elementAt(0), b = v.elementAt(1), c = v.elementAt(2);
+    var l = [a * b ~/ c, a ~/ b * c];
+    print(max(l.elementAt(0), l.elementAt(1)));
+
+}

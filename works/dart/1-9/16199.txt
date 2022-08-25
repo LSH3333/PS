@@ -1,0 +1,21 @@
+import 'dart:io';
+
+void main()
+{
+    var v = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    int y1 = v.elementAt(0), m1 = v.elementAt(1), d1 = v.elementAt(2);
+    v = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    int y2 = v.elementAt(0), m2 = v.elementAt(1), d2 = v.elementAt(2);
+
+    // 만 나이
+    int ans = y2 - y1 - 1;
+    if(m1 < m2 || (m1 == m2 && d1 <= d2)) print(ans+1);
+    else print(ans);
+    // 세는 나이
+    ans = y2 - y1 + 1;
+    print(ans);
+    // 연 나이
+    ans = y2 - y1;
+    print(ans);
+
+}

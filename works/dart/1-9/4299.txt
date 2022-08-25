@@ -1,0 +1,18 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var v = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    int c = v.elementAt(0), d = v.elementAt(1);
+
+    if(c < d || (c+d) % 2 != 0 || (c-d) % 2 != 0)
+        print(-1);
+    else
+    {
+        var a = (c + d) ~/ 2;
+        var b = (c - d) ~/ 2;
+        print("${a} ${b}");
+    }
+
+}

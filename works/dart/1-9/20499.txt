@@ -1,0 +1,9 @@
+import 'dart:io';
+
+void main()
+{
+    var v = stdin.readLineSync()!.split('/').map((o) => int.parse(o));
+    int K = v.elementAt(0), D = v.elementAt(1), A = v.elementAt(2);
+    if(K + A < D || D == 0) print("hasu");
+    else print("gosu");
+}
