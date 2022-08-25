@@ -1,0 +1,10 @@
+import 'dart:io';
+
+void main()
+{
+    var T = int.parse(stdin.readLineSync()!);
+    for(var i = 1; i <= T; i++) {
+        print('Hello World, Judge ${i}!');
+    }
+
+}

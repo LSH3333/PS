@@ -1,0 +1,11 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    int N = int.parse(stdin.readLineSync()!);
+    for(int i = 1; i <= 9; i++) {
+        print('${N} * ${i} = ${2*i}');
+    }
+
+}

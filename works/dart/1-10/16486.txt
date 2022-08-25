@@ -1,0 +1,11 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var d1 = int.parse(stdin.readLineSync()!);
+    var d2 = int.parse(stdin.readLineSync()!);
+    var pie = 3.141592;
+    var ans = (pie * 2 * d2) + (d1 * 2);
+    print(ans);
+}

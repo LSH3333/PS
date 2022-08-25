@@ -1,0 +1,19 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var v = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    var Br = v.elementAt(0), Bc = v.elementAt(1);
+    v = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    var Dr = v.elementAt(0), Dc = v.elementAt(1);
+    v = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    var Jr = v.elementAt(0), Jc = v.elementAt(1);
+
+    int D = (Dr - Jr).abs() + (Dc - Jc).abs();
+    int B = ((Br - Jr).abs() + (Bc - Jc).abs() / 2).toInt();
+
+    if(D < B) print("daisy");
+    else if(D > B) print("bessie");
+    else print("tie");
+}

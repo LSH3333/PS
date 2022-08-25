@@ -1,0 +1,15 @@
+import 'dart:io';
+
+void main()
+{
+    int A = int.parse(stdin.readLineSync()!);
+    int B = int.parse(stdin.readLineSync()!);
+    int C = int.parse(stdin.readLineSync()!);
+    int D = int.parse(stdin.readLineSync()!);
+    int E = int.parse(stdin.readLineSync()!);
+
+    int ans;
+    if(A < 0) ans = (C * A.abs()) + D + (E * B.abs());
+    else ans = (B - A) * E;
+    print(ans);
+}

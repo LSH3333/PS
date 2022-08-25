@@ -1,0 +1,15 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    int people = 0, answer = 0;
+    for(int i = 0; i < 4; i++) {
+        var s = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+        int a = s.elementAt(0), b = s.elementAt(1);
+        people = people - a + b;
+        answer = max(answer, people);
+    }
+
+    print(answer);
+}

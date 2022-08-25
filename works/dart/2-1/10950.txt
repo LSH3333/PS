@@ -1,0 +1,12 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var T = int.parse(stdin.readLineSync()!);
+    for(int i = 0; i < T; i++) {
+        var s = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+        print(s.elementAt(0) + s.elementAt(1));
+    }
+
+}

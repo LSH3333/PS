@@ -1,0 +1,14 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var v = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    var N = v.elementAt(0), M = v.elementAt(1), K = v.elementAt(2);
+
+    var O1 = M, X1 = N-M;
+    var O2 = K, X2 = N-K;
+
+    var ans = min(O1, O2) + min(X1, X2);
+    print(ans);
+}
