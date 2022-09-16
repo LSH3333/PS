@@ -1,64 +1,78 @@
 #include <iostream>
+#include <vector>
 #include <algorithm>
 using namespace std;
 
 int N;
+int arr[100010];
+int numCnt[4];
 
-int Cal(int x, int y, int z, int arr[])
+int Cal(const vector<int> &order)
 {
-    int cnt = 0;
-    int begin = 0, end = N-1;
-    bool fin = false;
-    while(begin < end)
+    vector<int> a;
+    for (int i = 0; i < numCnt[order[0]]; i++) a.push_back(order[0]);
+    for (int i = 0; i < numCnt[order[1]]; i++) a.push_back(order[1]);
+    for (int i = 0; i < numCnt[order[2]]; i++) a.push_back(order[2]);
+
+    vector<vector<int>> pos(4, vector<int>(4, 0));
+    for(int i = 0; i < N; i++)
     {
-        while(arr[begin] == x) begin++;
-        while(arr[end] != x)
-        {
-            end--;
-            if(end <= begin) { fin = true; break; }
-        }
-        if(fin) break;
-
-        swap(arr[begin], arr[end]);
-        cnt++;
+        pos[a[i]][arr[i]]++;
     }
+    
 
-    for(int i = 0; i < N; i++) if(arr[i] != x) {begin = i; break;}
-    end = N-1, fin = false;
-    while(begin < end)
+    int answer = 0;
+    for(int i = 1; i <= 3; i++)
     {
-        while(arr[begin] == y) begin++;
-        while(arr[end] != y)
+        for(int j = 1; j <= 3; j++)
         {
-            end--;
-            if(end <= begin) { fin = true; break; }
+            if(i == j || pos[i][j] == 0) continue;
+
+            if(pos[j][i] != 0)
+            {
+                int cnt = min(pos[i][j], pos[j][i]);
+                pos[i][j] -= cnt;
+                pos[i][i] += cnt;
+                pos[j][i] -= cnt;
+                pos[j][j] += cnt;
+                answer += cnt;
+            }
+
+            int next;
+            for(int k = 1; k <= 3; k++)
+            {
+                if(k == i || k == j) continue;
+                next = k;
+            }
+
+            if(pos[next][i] != 0)
+            {
+                int cnt = min(pos[i][j], pos[next][i]);
+                pos[i][j] -= cnt;
+                pos[i][i] += cnt;
+                pos[next][i] -= cnt;
+                pos[next][j] += cnt;
+                answer += cnt;
+            }
         }
-        if(fin) break;
-
-        swap(arr[begin], arr[end]);
-        cnt++;
     }
-
-    return cnt;
+    return answer;
 }
 
 int main()
 {
     ios::sync_with_stdio(false); cin.tie(NULL);
     cin >> N;
-    int a[100010];
-    for(int i = 0; i < N; i++) cin >> a[i];
+    for(int i = 0; i < N; i++)
+    {
+        cin >> arr[i];
+        numCnt[arr[i]]++;
+    }
 
-    int answer = 100000000;
-    int nums[] = {1,2,3};
+    int ans = 100000000;
+    vector<int> order = {1,2,3};
     do {
-        int arr[100010];
-        for(int i = 0; i < N; i++) arr[i] = a[i];
-        answer = min(answer, Cal(nums[0], nums[1], nums[2], arr));
-//        cout << "--------------\n";
-//        cout << nums[0] << ' ' << nums[1] << ' ' << nums[2] << endl;
-//        cout << Cal(nums[0], nums[1], nums[2], arr) << endl;
-    } while(next_permutation(nums, nums+3));
-
-    cout << answer;
+        ans = min(ans, Cal(order));
+    } while(next_permutation(order.begin(), order.end()));
+    cout << ans;
 }
