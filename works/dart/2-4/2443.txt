@@ -1,0 +1,23 @@
+import 'dart:io';
+
+void main()
+{
+  // String is immutable
+  int n = int.parse(stdin.readLineSync()!);
+
+  var ans = "";
+  var l = 0, m = 0;
+  for(int i = 1; i <= n; i++) {
+    var tmp = "";
+    for(int j = 0; j < l; j++) {
+      tmp += ' ';
+    }
+    for(int j = 0; j < 2 * n - (1 - m); j++) {
+      tmp += '*';
+    }
+    ans += tmp + '\n';
+    l++;
+    m -= 2;
+  }
+  print(ans);
+}

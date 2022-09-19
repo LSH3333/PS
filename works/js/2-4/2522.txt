@@ -1,0 +1,28 @@
+let fs = require('fs');
+// let input = fs.readFileSync('input.txt').toString().split('\n');
+let input = fs.readFileSync('dev/stdin').toString().trim().split('\n')
+
+var n = parseInt(input[0])
+var ans = ""
+
+var l = n-1, m = 1
+for(i = 1; i <= n; i++) {
+    var tmp = "" 
+    for(j = 0; j < l; j++) tmp += ' '
+    for(j = 0; j < m; j++) tmp += '*'
+    ans += tmp + '\n' 
+    l--
+    m++
+}
+l = 1, m = n-1
+for(i = 2; i <= n; i++) {
+    var tmp = "" 
+    for(j = 0; j < l; j++) tmp += ' '
+    for(j = 0; j < m; j++) tmp += '*'
+    ans += tmp + '\n' 
+    l++ 
+    m--
+}
+
+
+console.log(ans)
