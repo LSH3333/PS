@@ -1,0 +1,22 @@
+import 'dart:io';
+
+void main()
+{
+    int n = int.parse(stdin.readLineSync()!);
+
+    var ans = "";
+    int cnt = n-1;
+    for(int i = 0; i < n; i++) {
+        int j;
+        var tmp = "";
+        for(j = 0; j < cnt; j++) {
+          tmp += ' ';
+        }
+        for(j; j < n; j++) {
+          tmp += '*';
+        }
+        ans += tmp + '\n';
+        cnt--;
+    }
+    print(ans);
+}
