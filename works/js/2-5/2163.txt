@@ -1,0 +1,10 @@
+let fs = require('fs');
+// let input = fs.readFileSync('input.txt').toString().split(' ');
+let input = fs.readFileSync('dev/stdin').toString().trim().split(' ')
+
+
+// (r-1) + ((c-1) * (r))
+r = parseInt(input[0])
+c = parseInt(input[1])
+console.log((r-1) + ((c-1) * (r)))
+

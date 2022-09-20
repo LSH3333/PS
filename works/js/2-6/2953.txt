@@ -1,0 +1,22 @@
+let fs = require('fs');
+// let input = fs.readFileSync('input.txt').toString().split('\n');
+let input = fs.readFileSync('dev/stdin').toString().trim().split('\n')
+
+var sums = [0, 0, 0, 0, 0]
+for(i = 0; i < 5; i++) {
+    var arr = input[i].split(' ').map(Number) 
+    var sum = 0 
+    for(j = 0; j < 4; j++) {
+        sum += arr[j] 
+    }
+    sums[i] = sum 
+}
+
+var maxVal = 0, maxIdx = 0  
+for(i = 0; i < 5; i++) {
+    if(sums[i] > maxVal) {
+        maxVal = sums[i] 
+        maxIdx = i 
+    }
+}
+console.log(maxIdx+1 + ' ' + maxVal)

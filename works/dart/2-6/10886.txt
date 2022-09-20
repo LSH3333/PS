@@ -1,0 +1,17 @@
+import 'dart:io';
+
+void main()
+{
+  // var s = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+  var N = int.parse(stdin.readLineSync()!);
+  var sum = [0, 0];
+  for(int i = 1; i <= N; i++) {
+    var n = int.parse(stdin.readLineSync()!);
+    sum[n]++;
+  }
+  if(sum[0] > sum[1]) {
+    print("Junhee is not cute!");
+  } else {
+    print("Junhee is cute!");
+  }
+}

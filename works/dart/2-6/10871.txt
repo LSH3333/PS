@@ -1,0 +1,13 @@
+import 'dart:io';
+
+void main()
+{
+  var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+  var N = ip.elementAt(0), X = ip.elementAt(1);
+  var arr = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+  var ans = "";
+  for(var x in arr) {
+    if(x < X) ans += '$x ';
+  }
+  print(ans);
+}

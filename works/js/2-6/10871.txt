@@ -1,0 +1,11 @@
+let fs = require('fs');
+// let input = fs.readFileSync('input.txt').toString().split('\n');
+let input = fs.readFileSync('dev/stdin').toString().trim().split('\n')
+
+var [N, X] = input[0].split(' ').map(Number)
+var arr = input[1].split(' ').map(Number) 
+var ans = ""
+for(i = 0; i < N; i++) {
+    if(arr[i] < X) ans += arr[i] + ' '
+}
+console.log(ans)

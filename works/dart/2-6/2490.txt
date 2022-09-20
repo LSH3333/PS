@@ -1,0 +1,18 @@
+import 'dart:io';
+
+void main()
+{
+  for(int i = 0; i < 3; i++) {
+    var arr = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    var sum = [0, 0];
+    for(int j = 0; j < 4; j++) {
+      sum[arr.elementAt(j)]++;
+    }
+
+    if(sum[0] == 1 && sum[1] == 3) print('A');
+    else if(sum[0] == 2 && sum[1] == 2) print('B');
+    else if(sum[0] == 3 && sum[1] == 1) print('C');
+    else if(sum[0] == 4) print('D');
+    else print('E');
+  }
+}

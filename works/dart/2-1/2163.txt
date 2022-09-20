@@ -1,0 +1,8 @@
+import 'dart:io';
+
+void main()
+{
+  var s = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+  var r = s.elementAt(0), c = s.elementAt(1);
+  print((r-1) + ((c-1) * (r)));
+}
