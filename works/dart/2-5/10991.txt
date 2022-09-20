@@ -1,0 +1,24 @@
+import 'dart:io';
+
+void main()
+{
+    int N = int.parse(stdin.readLineSync()!);
+    var tmp = "";
+    for(int i = 0; i < N*2-1; i++) {
+        tmp += ' ';
+    }
+    var a = new List<String>.generate(N+1, (index) => tmp);
+
+    var l = N-1, r = N-1;
+    for(int i = 1; i <= N; i++) {
+        a[i] = a[i].substring(0, l) + '*' + a[i].substring(l+1, a[i].length);
+        a[i] = a[i].substring(0, r) + '*' + a[i].substring(r+1, a[i].length);
+        // a[i] = a[i].substring(0, l) + '*' + a[i].substring(l+1, r) + '*' + a[i].substring(r+1, a[i].length);
+        l--;
+        r++;
+    }
+
+    for(int i = 1; i <= N; i++) {
+        print(a[i]);
+    }
+}
