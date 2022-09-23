@@ -1,0 +1,9 @@
+import 'dart:io';
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ');
+    int r = int.parse(ip[0]);
+    int c = int.parse(ip[1]);
+    print((r-1) + ((c-1) * r));
+}
