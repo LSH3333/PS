@@ -12,6 +12,7 @@ struct Node
 
 Node nodePool[10010];
 int mark[10010];
+int parentNum[10010];
 int colIdx = 1;
 
 void InOrder(Node *node, int level)
@@ -23,7 +24,7 @@ void InOrder(Node *node, int level)
     InOrder(node->right, level+1);
 }
 
-int FindRoot(const vector<int> &parentNum)
+int FindRoot()
 {
     for(int i = 1; i <= N; i++)
     {
@@ -35,7 +36,6 @@ int main()
 {
     ios::sync_with_stdio(false); cin.tie(NULL);
     cin >> N;
-    vector<int> parentNum(N+1, 0);
     for(int i = 1; i <= N; i++)
     {
         int a, b, c; cin >> a >> b >> c;
@@ -51,7 +51,7 @@ int main()
         parentNum[c]++;
     }
 
-    int root = FindRoot(parentNum);
+    int root = FindRoot();
     InOrder(&nodePool[root], 1);
 
     // col min, max
@@ -71,7 +71,8 @@ int main()
         levelMark[level] = {minCol, maxCol};
     }
 
-    int ansWidth = 0, ansLevel = 0;
+    int ansWidth = levelMark[1].second - levelMark[1].first + 1;
+    int ansLevel = 1;
     for(int i = 1; i <= maxLevel; i++)
     {
         int width = levelMark[i].second - levelMark[i].first + 1;
