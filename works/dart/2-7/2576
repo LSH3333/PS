@@ -1,0 +1,26 @@
+import 'dart:io';
+
+void main()
+{
+    var arr = <int>[];
+    for(int i = 0; i < 7; i++) {
+        arr.add(int.parse(stdin.readLineSync()!));
+    }
+
+    var sum = 0, min = 100000;
+    for(int i = 0; i < arr.length; i++) {
+        var val = arr.elementAt(i);
+        if(val % 2 != 0) {
+            sum += val;
+            if(val < min) min = val;
+        }
+    }
+
+    if(sum == 0) {
+        print(-1);
+    }
+    else {
+        print(sum);
+        print(min);
+    }
+}

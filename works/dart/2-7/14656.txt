@@ -1,0 +1,12 @@
+import 'dart:io';
+
+void main()
+{
+    var n = int.parse(stdin.readLineSync()!);
+    var arr = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    var ans = 0;
+    for(int i = 1; i <= n; i++) {
+        if(arr.elementAt(i-1) != i) ans++;
+    }
+    print(ans);
+}

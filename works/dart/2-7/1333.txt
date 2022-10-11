@@ -1,0 +1,26 @@
+import 'dart:io';
+
+void main()
+{
+    var input = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    var N = input.elementAt(0), L = input.elementAt(1), D = input.elementAt(2);
+    var arr = List.filled(10000, false, growable: false);
+    var idx = 0;
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j < L; j++) {
+            arr[idx++] = true;
+        }
+        idx += 5;
+    }
+
+    var t = 0;
+    while(true) {
+        if(t > (L+5) * N) {
+            print(t); break;
+        }
+        if(!arr[t]) {
+            print(t); break;
+        }
+        t += D;
+    }
+}

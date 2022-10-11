@@ -1,0 +1,15 @@
+import 'dart:io';
+
+void main()
+{
+    var T = int.parse(stdin.readLineSync()!);
+    while(T-- > 0) {
+        var n = int.parse(stdin.readLineSync()!);
+        var sum = 0;
+        var arr = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+        for (var value in arr) {
+          sum += value;
+        }
+        print(sum);
+    }
+}
