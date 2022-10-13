@@ -1,0 +1,13 @@
+import 'dart:io';
+
+void main()
+{
+  var N = int.parse(stdin.readLineSync()!);
+  var ans = 0;
+  for(int i = 1; i <= N; i++) {
+         var arr = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+         var student = arr.elementAt(0), apple = arr.elementAt(1);
+         ans += (apple % student).floor();
+  }
+  print(ans);
+}

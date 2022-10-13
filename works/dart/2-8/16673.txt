@@ -1,0 +1,12 @@
+import 'dart:io';
+
+void main()
+{
+  var input = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+  var C = input.elementAt(0), K = input.elementAt(1), P = input.elementAt(2);
+  var ans = 0;
+  for(int i = 1; i <= C; i++) {
+    ans += (K * i) + (P * i * i);
+  }
+  print(ans);
+}

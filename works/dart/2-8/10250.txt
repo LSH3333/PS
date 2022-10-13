@@ -1,0 +1,27 @@
+import 'dart:io';
+void main()
+{
+  var T = int.parse(stdin.readLineSync()!);
+  for(int i = 1; i <= T; i++) {
+    var arr = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    var C = arr.elementAt(0), N = arr.elementAt(2);
+
+    var r, c;
+    if(N % C == 0) {
+      r = (N / C).floor();
+      c = C;
+    }
+    else {
+      r = (N/C).floor() + 1;
+      c = (N % C).floor();
+    }
+
+    var ans = c.toString();
+    if(r < 10) {
+      ans = "${ans}0$r";
+    } else {
+      ans = "$ans$r";
+    }
+    print(ans);
+  }
+}
