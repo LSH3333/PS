@@ -1,0 +1,16 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var H = ip[0], M = ip[1];
+
+    var time = (H * 60 + M) - 45;
+    var h = (time / 60).floor();
+    var m = (time % 60).floor();
+    if(h < 0) h = 24 + h;
+    if(m < 0) m = 60 + m;
+    print('$h $m');
+
+}

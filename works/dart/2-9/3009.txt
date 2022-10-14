@@ -1,0 +1,20 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var p1 = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var p2 = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var p3 = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+
+    var x = 0, y = 0;
+    if(p1[0] == p2[0]) x = p3[0];
+    else if(p2[0] == p3[0]) x = p1[0];
+    else x = p2[0];
+
+    if(p1[1] == p2[1]) y = p3[1];
+    else if(p2[1] == p3[1]) y = p1[1];
+    else y = p2[1];
+
+    print("$x $y");
+}

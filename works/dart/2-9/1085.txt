@@ -1,0 +1,9 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o));
+    var arr = [ip.elementAt(0), ip.elementAt(1), ip.elementAt(2)-ip.elementAt(0), ip.elementAt(3)-ip.elementAt(1)];
+    print(arr.reduce(min));
+}

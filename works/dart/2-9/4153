@@ -1,0 +1,19 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    while(true) {
+        var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+        ip.sort();
+        var a = ip[0], b = ip[1], c = ip[2];
+        if(a == 0 && b == 0 && c == 0) break;
+
+        if((a*a) + (b*b) == (c*c)) {
+            print("right");
+        }
+        else {
+            print("wrong");
+        }
+    }
+}
