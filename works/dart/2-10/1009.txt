@@ -1,0 +1,18 @@
+import 'dart:io';
+
+void main()
+{
+    var T = int.parse(stdin.readLineSync()!);
+    while(T-- > 0) {
+        var arr = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+        var a = arr[0], b = arr[1];
+
+        var res = 1;
+        for(int i = 0; i < b; i++) {
+            res = (res * a) % 10;
+        }
+
+        if(res == 0) res = 10;
+        print(res);
+    }
+}

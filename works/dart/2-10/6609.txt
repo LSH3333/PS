@@ -1,0 +1,23 @@
+import 'dart:io';
+
+void main()
+{
+    while(true) {
+        var input = stdin.readLineSync()!;
+        if(input.isEmpty) break;
+        var ip = input.split(' ').map((o) => int.parse(o)).toList();
+
+        var M = ip[0], P = ip[1], L = ip[2], E = ip[3], R = ip[4], S = ip[5], N = ip[6];
+        var e = E, l = L, p = P, m = M;
+        while(N-- > 0) {
+            var ne = (m * E);
+            var nl = ne;
+            var np = (l / R).floor();
+            var nm = (p / S).floor();
+            e = ne; p = np; m = nm; l = nl;
+        }
+        print(m);
+    }
+
+
+}

@@ -1,0 +1,18 @@
+import 'dart:io';
+
+void main()
+{
+    var N = int.parse(stdin.readLineSync()!);
+    for(int t = 1; t <= N; t++) {
+        var arr = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+        arr.sort();
+
+        print("Scenario #${t}:");
+        if((arr[0]*arr[0]) + (arr[1]*arr[1]) == (arr[2]*arr[2])) {
+            print("yes\n");
+        }
+        else {
+            print("no\n");
+        }
+    }
+}
