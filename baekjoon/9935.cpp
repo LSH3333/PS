@@ -1,48 +1,57 @@
 #include <iostream>
 #include <stack>
-#include <vector>
 using namespace std;
 
-int main()
+void Check(string &str, const string &bombStr)
 {
-    string str; cin >> str;
-    string bombStr; cin >> bombStr;
+    string ret;
+    stack<int> st;
 
-    bool found = false;
-    int count = 0;
-    stack<char> st;
-
-    for(int i = 0; i < str.length(); i++)
+    for(int i = 0; i < str.size(); i++)
     {
         char c = str[i];
-        if(c == bombStr[count])
+
+        if(st.empty())
         {
-            count++;
+            if(c == bombStr.front()) st.push(1);
+            else st.push(0);
         }
         else
         {
-            if(c == bombStr[0]) count = 1;
-            else count = 0;
+            if(c == bombStr[st.top()])
+            {
+                st.push(st.top()+1);
+            }
+            else
+            {
+                if(c == bombStr.front()) st.push(1);
+                else st.push(0);
+            }
         }
-        st.push(c);
 
-        if(count == bombStr.size())
+        ret.push_back(c);
+
+        if(st.top() == bombStr.size())
         {
-            for(int j = 0; j < count; j++) st.pop();
-            count = 0;
-            found = true;
+            int top = st.top();
+            while(top-- > 0)
+            {
+                st.pop();
+                ret.pop_back();
+            }
         }
     }
 
-    vector<char> ans(st.size());
-    int idx = (int)st.size()-1;
-    while(!st.empty())
-    {
-        ans[idx--] = st.top();
-        st.pop();
-    }
-    for(auto x : ans) cout << x;
+    if(ret.empty()) cout << "FRULA";
+    else cout << ret;
+}
 
+int main()
+{
+    ios::sync_with_stdio(false); cin.tie(NULL);
+    string str; cin >> str;
+    string bombStr; cin >> bombStr;
 
+    Check(str, bombStr);
 
 }
