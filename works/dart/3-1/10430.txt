@@ -1,0 +1,12 @@
+import 'dart:io';
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var A = ip[0], B = ip[1], C = ip[2];
+    print((A+B)%C);
+    print(((A%C) + (B%C))%C);
+    print((A*B)%C);
+    print(((A%C)*(B%C))%C);
+
+}

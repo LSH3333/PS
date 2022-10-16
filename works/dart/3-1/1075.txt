@@ -1,0 +1,20 @@
+import 'dart:io';
+
+void main()
+{
+    var N = int.parse(stdin.readLineSync()!);
+    var F = int.parse(stdin.readLineSync()!);
+
+    var num = N - N % 100;
+    var ans = 0;
+    if((num % F).floor() == 0) {
+        ans = (num ~/ F) * F;
+    }
+    else {
+        ans = (num ~/ F) * F + F;
+    }
+
+    ans = ans % 100;
+    if(ans < 10) print('0$ans');
+    else print(ans);
+}

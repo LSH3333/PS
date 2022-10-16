@@ -1,0 +1,25 @@
+import 'dart:io';
+
+void main()
+{
+    var a = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var asc = true, desc = true;
+    for(int i = 1; i <= 8; i++) {
+        if(a[i-1] != i) {
+            asc = false;
+        }
+        if(a[i-1] != 9-i) {
+            desc = false;
+        }
+    }
+
+    if(asc) {
+        print("ascending");
+    }
+    else if(desc) {
+        print("descending");
+    }
+    else {
+        print("mixed");
+    }
+}
