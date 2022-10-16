@@ -1,0 +1,17 @@
+import 'dart:io';
+
+void main()
+{
+    var N = int.parse(stdin.readLineSync()!);
+    var add = 5;
+    var n = 1, cnt = 1;
+    while(true) {
+        if(n >= N) {
+            print(cnt);
+            break;
+        }
+        cnt++;
+        n = n + 1 + add;
+        add += 6;
+    }
+}

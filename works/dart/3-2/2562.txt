@@ -1,0 +1,16 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var maxVal = 0, maxIdx = 0;
+    for(int i = 1; i <= 9; i++) {
+        var n = int.parse(stdin.readLineSync()!);
+        if(n > maxVal) {
+            maxVal = n;
+            maxIdx = i;
+        }
+    }
+    print(maxVal);
+    print(maxIdx);
+}

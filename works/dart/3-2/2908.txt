@@ -1,0 +1,15 @@
+import 'dart:io';
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var A = ip[0], B = ip[1];
+    var a = (A % 10 * 100) + ((A % 100 ~/ 10) * 10) + (A ~/ 100);
+    var b = (B % 10 * 100) + ((B % 100 ~/ 10) * 10) + (B ~/ 100);
+    if(a > b) {
+        print(a);
+    }
+    else {
+        print(b);
+    }
+}
