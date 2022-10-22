@@ -1,0 +1,24 @@
+import 'dart:io';
+
+void main()
+{
+    var N = stdin.readLineSync()!;
+    var n = N;
+    if(N.length < 2) N = '0' + N;
+    var ans = 0;
+
+    while(true) {
+        ans++;
+        if(n.length < 2) {
+            n = '0' + n;
+        }
+        var sum = (int.parse(n[0]) + int.parse(n[1])).toString();
+        if(sum.length < 2) {
+            sum = '0' + sum;
+        }
+        n = n[1] + sum[1];
+        if(n == N) break;
+    }
+    print(ans);
+
+}
