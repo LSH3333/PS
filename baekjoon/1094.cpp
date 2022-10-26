@@ -1,0 +1,40 @@
+#include<stdio.h>
+
+int sumall(int arr[]) { //?? ?? ?
+    int sum = 0;
+    for(int i = 0; i < 10; i++) {
+        sum += arr[i];
+    }
+    return sum;
+}
+
+int sum(int arr[], int e) { //?? 0?? e?? ?
+    int sum = 0;
+    for(int i = 0; i < e; i++) {
+        sum += arr[i];
+    }
+    return sum;
+}
+
+int main() {
+    int x;
+    scanf("%d", &x);
+
+    int arr[10] = {64, 0};
+    int i = 0;
+
+    while(1) {
+    if(sumall(arr) > x) { //?? ?? ? x ???? 1/2
+        arr[i] /= 2;
+        arr[i + 1] = arr[i];
+    }
+    else if(sumall(arr) == x)  break; //x? 64? ?? break
+
+    if(sum(arr, i + 1) > x) arr[i + 1] = 0; // ?? ?? ???? ?? ?? ? x ???? ?? ??
+    else if(sum(arr, i + 1) == x) {break;} // ?? ?? ???? ???? ? x? ?.
+    else if(sum(arr, i + 1) < x) i++; //?? ?? ???? ?? ?? ? x ???? ???? ??
+
+    }
+    printf("%d", i+1);
+
+}
