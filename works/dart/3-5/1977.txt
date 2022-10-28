@@ -1,0 +1,24 @@
+import 'dart:io';
+import 'dart:math';
+
+void main() {
+  var M = int.parse(stdin.readLineSync()!);
+  var N = int.parse(stdin.readLineSync()!);
+  var sum = 0, minVal = 100000;
+
+  for(int i = 1; i <= 100; i++) {
+    var n = i * i;
+    if(n >= M && n <= N) {
+      sum += n;
+      minVal = min(minVal, n);
+    }
+  }
+
+  if(sum == 0) {
+    print(-1);
+  }
+  else {
+    print(sum);
+    print(minVal);
+  }
+}

@@ -1,0 +1,12 @@
+import 'dart:io';
+import 'dart:math';
+
+void main() {
+  var N = int.parse(stdin.readLineSync()!);
+  var ans = 0;
+  var i = 1;
+  for(; i < N; i++) {
+    ans += (N * i) + i;
+  }
+  print(ans);
+}

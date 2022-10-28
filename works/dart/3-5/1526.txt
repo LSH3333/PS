@@ -1,0 +1,21 @@
+import 'dart:io';
+import 'dart:math';
+
+void main() {
+  var N = int.parse(stdin.readLineSync()!);
+
+  for(int i = N; i > 0; i--) {
+    var str = i.toString();
+    var check = true;
+    for(int j = 0; j < str.length; j++) {
+      if(str[j] != '4' && str[j] != '7') {
+        check = false;
+        break;
+      }
+    }
+    if(check) {
+      print(i);
+      break;
+    }
+  }
+}

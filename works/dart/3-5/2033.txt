@@ -1,0 +1,21 @@
+import 'dart:io';
+import 'dart:math';
+
+void main() {
+  var N = int.parse(stdin.readLineSync()!);
+  var n = 10;
+
+  while(n <= N) {
+    if(N > n) {
+      if((N % n) / (n ~/ 10) >= 5) {
+        N = ((N ~/ n) + 1) * n;
+      }
+      else {
+        N = (N ~/ n) * n;
+      }
+    }
+    n *= 10;
+  }
+
+  print(N);
+}
