@@ -1,0 +1,19 @@
+import 'dart:io';
+import 'dart:math';
+
+void main() {
+  var N = int.parse(stdin.readLineSync()!);
+  var score = stdin.readLineSync()!.split(' ').map((o) => double.parse(o)).toList();
+  var M = 0.0;
+  var sum = 0.0;
+  for (var element in score) {
+    M = max(M, element);
+  }
+
+  for(int i = 0; i < score.length; i++) {
+    score[i] = score[i] / M * 100;
+    sum += score[i];
+  }
+
+  print(sum / score.length);
+}

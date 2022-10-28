@@ -1,0 +1,14 @@
+import 'dart:io';
+import 'dart:math';
+
+Rev(x) {
+  var ret = x.split('').reversed.join('');
+  return int.parse(ret);
+}
+
+void main() {
+  var ip = stdin.readLineSync()!.split(' ').toList();
+  var X = ip[0], Y = ip[1];
+  var ans = Rev(X) + Rev(Y);
+  print(Rev(ans.toString()));
+}
