@@ -1,0 +1,27 @@
+import 'dart:io';
+import 'dart:math';
+
+void main() {
+  var mark = List.filled(10001, false, growable: false);
+
+  for(int i = 1; i <= 10000; i++) {
+    var n = i.toString();
+    while(true) {
+      var next = int.parse(n);
+      for(int j = 0; j < n.length; j++) {
+        next += int.parse(n[j]);
+      }
+      if(next > 10000) break;
+      mark[next] = true;
+      n = next.toString();
+    }
+  }
+
+  var ans = "";
+  for(int i = 1; i <= 10000; i++) {
+    if(!mark[i]) {
+      ans += '$i\n';
+    }
+  }
+  print(ans);
+}

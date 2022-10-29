@@ -1,0 +1,13 @@
+import 'dart:io';
+
+void main() {
+  var N = int.parse(stdin.readLineSync()!);
+  var ans = 0;
+  while(N > 0) {
+    if(N % 2 != 0) {
+      ans++;
+    }
+    N = N ~/ 2;
+  }
+  print(ans);
+}

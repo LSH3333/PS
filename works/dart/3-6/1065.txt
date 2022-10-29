@@ -1,0 +1,27 @@
+import 'dart:io';
+import 'dart:math';
+
+void main() {
+  var N = int.parse(stdin.readLineSync()!);
+  var ans = 0;
+
+  for(int i = 1; i <= N; i++) {
+    var n = i.toString();
+    if(i < 10) {
+      ans++;
+    }
+    else {
+      var sub = int.parse(n[0]) - int.parse(n[1]);
+      var check = true;
+      for(int j = 1; j < n.length-1; j++) {
+        if(int.parse(n[j]) - int.parse(n[j+1]) != sub) {
+          check = false;
+          break;
+        }
+      }
+      if(check) ans++;
+    }
+  }
+
+  print(ans);
+}

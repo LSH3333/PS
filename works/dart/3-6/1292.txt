@@ -1,0 +1,18 @@
+import 'dart:io';
+import 'dart:math';
+
+void main() {
+  var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+  var A = ip[0], B = ip[1];
+  var ans = 0;
+  var i = 1, cnt = 0;
+
+  while(cnt < B) {
+    for(int j = 0; j < i; j++) {
+      cnt++;
+      if(cnt >= A && cnt <= B) ans += i;
+    }
+    i++;
+  }
+  print(ans);
+}
