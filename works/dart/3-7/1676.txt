@@ -1,0 +1,32 @@
+import 'dart:io';
+import 'dart:math';
+
+var five = 0, two = 0;
+
+void main()
+{
+    var N = int.parse(stdin.readLineSync()!);
+
+    for(int i = 2; i <= N; i++) {
+        Cal(i);
+    }
+
+    print(min(two, five));
+
+}
+
+void Cal(num) {
+    while(num > 0) {
+        if(num % 5 == 0) {
+            five++;
+            num = num ~/ 5;
+        }
+        else if(num % 2 == 0) {
+            two++;
+            num = num ~/ 2;
+        }
+        else {
+            break;
+        }
+    }
+}

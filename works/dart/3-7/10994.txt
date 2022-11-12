@@ -1,0 +1,35 @@
+import 'dart:io';
+
+void main()
+{
+    var N = int.parse(stdin.readLineSync()!);
+    var board = List.generate(2*2*(N-1)+1,
+            (index) => List.generate(2*2*(N-1)+1, (_) => ' '));
+
+    Draw(N, 0, 0, board);
+
+    var ans = "";
+    for(int i = 0; i < board.length; i++) {
+        for(int j = 0; j < board.length; j++) {
+            if(board[i][j] == '*') ans += board[i][j];
+            else ans += ' ';
+        }
+        ans += '\n';
+    }
+
+    print(ans);
+}
+
+void Draw(n, _r, _c, board) {
+    if(n == 0) return;
+
+    int len = (2 * 2 * (n-1) + 1).toInt();
+    for(int i = 0; i < len; i++) {
+        board[_r+i][_c] = '*';
+        board[_r][_c+i] = '*';
+        board[_r+len-1][_c+i] = '*';
+        board[_r+i][_c+len-1] = '*';
+    }
+
+    Draw(n-1, _r+2, _c+2, board);
+}

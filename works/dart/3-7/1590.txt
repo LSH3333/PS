@@ -1,0 +1,43 @@
+import 'dart:io';
+import 'dart:math';
+
+var five = 0, two = 0;
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var N = ip[0], T = ip[1];
+    var ans = pow(2,31);
+
+    for(int i = 1; i <= N; i++) {
+        ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+        var start = ip[0], len = ip[1], cnt = ip[2];
+        for(int j = 0; j < cnt; j++) {
+            var time = start + (j * len);
+            if(time - T >= 0) {
+                ans = min(ans, time-T);
+                break;
+            }
+        }
+    }
+
+    if(ans == 2147483648) print(-1);
+    else print(ans);
+
+}
+
+void Cal(num) {
+    while(num > 0) {
+        if(num % 5 == 0) {
+            five++;
+            num = num ~/ 5;
+        }
+        else if(num % 2 == 0) {
+            two++;
+            num = num ~/ 2;
+        }
+        else {
+            break;
+        }
+    }
+}

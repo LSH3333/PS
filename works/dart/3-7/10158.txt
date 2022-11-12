@@ -1,0 +1,22 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var w = ip[0], h = ip[1];
+    ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var x = ip[0], y = ip[1];
+    var t = int.parse(stdin.readLineSync()!);
+
+    var X = ((t + x) % (2*w));
+    if(X >= w) X = w - X % w;
+    else X = X % w;
+
+    var Y = ((t + y) % (2*h));
+    if(Y >= h) Y = h - Y % h;
+    else Y = Y % h;
+
+    print('$X $Y');
+
+}

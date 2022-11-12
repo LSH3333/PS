@@ -1,0 +1,38 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    int K = int.parse(stdin.readLineSync()!);
+    int C = int.parse(stdin.readLineSync()!);
+    var ans = "";
+    for(int i = 2; i < 2+C; i++) {
+        var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+        int M = ip[0], N = ip[1];
+
+        if(M == N) {
+            ans += "1\n";
+            continue;
+        }
+
+        num left = K - max(M, N);
+        if(M > N) {
+            if((M-N).abs() - left <= 2) {
+                ans += "1\n";
+            }
+            else {
+                ans += "0\n";
+            }
+        }
+        else {
+            if((M-N).abs() - left <= 1) {
+                ans += "1\n";
+            }
+            else {
+                ans += "0\n";
+            }
+        }
+    }
+    print(ans);
+
+}
