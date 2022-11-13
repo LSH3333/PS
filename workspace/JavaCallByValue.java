@@ -1,3 +1,5 @@
+// https://tose33.tistory.com/937
+
 import java.io.IOException;
 
 class Type {
