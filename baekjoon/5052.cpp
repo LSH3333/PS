@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 struct TRIE {
@@ -50,6 +52,10 @@ void TRIE::Insert(const string &str, int idx) {
     node[cIdx]->Insert(str, idx + 1);
 }
 
+bool cmp(const string &a, const string &b) {
+    return a.size() < b.size();
+}
+
 int main() {
     ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
     int T; cin >> T;
@@ -60,9 +66,16 @@ int main() {
         // root
         TRIE *root = NewNode();
         cin >> N;
+        vector<string> v;
         for(int i = 0; i < N; i++) {
             string str; cin >> str;
-            root->Insert(str, 0);
+            v.push_back(str);
+
+        }
+        sort(v.begin(), v.end(), cmp);
+
+        for(int i = 0; i < N; i++) {
+            root->Insert(v[i], 0);
             if(answer) {
                 break;
             }
