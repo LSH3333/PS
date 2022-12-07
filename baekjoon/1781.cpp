@@ -1,60 +1,48 @@
-3
-1 20 - 
-2 50 - 
-2 30
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+using namespace std;
 
-3
-1 100 - 
-2 100 - 
-2 30
+int N;
 
-데드라인 1 이상인것 처리 가능 .. 
-Line, cup. 
-1 7
-1 6
-2 5
-2 4
-3 2
-3 1
-6 1   
+// second 기준 min heap
+struct cmp {
+    bool operator()(const pair<int,int> &a, const pair<int,int> &b) {
+        return a.second > b.second;
+    }
+};
 
-3 7
-3 6
-4 5
-5 4
-5 2
-5 1
-8 1   
+int main() {
+    ios::sync_with_stdio(false); cin.tie(NULL);
+    cin >> N;
+    vector<pair<int,int>> v(N);
+    priority_queue<pair<int,int>, vector<pair<int,int>>, cmp> pq;
+    for(int i = 0; i < N; i++) {
+        int a, b; cin >> a >> b;
+        v[i] = {a, b};
+    }
+    // first 기준 오름 차순 정렬
+    sort(v.begin(), v.end());
 
+    int time = 1; // 데드라인이 time 이상인 숙제들 처리 가능
+    for(auto x : v) {
+        // 데드 라인이 time 이상, pq에 삽입
+        if(x.first >= time) {
+            pq.push(x);
+            time++;
+        }
+        // 데드 라인이 time 미만 이기 때문에, 이미 pq에 넣은 일들 중 가장 컵라면 적은 일을 빼고 넣음
+        else {
+            pq.pop();
+            pq.push(x);
+        }
+    }
 
-데드라인 이내에서는 데드라인 빠른것 먼저 처리 
-데드라인 이내, 같은 데드라인끼리는 컵 많이 주는것 먼저 처리
-
-9
-1 14
-1 7
-2 10
-2 5
-3 8 // 
-4 18
-4 12
-4 6
-5 5
-
-
-
-1 8
-2 18
-2 12
-2 6
-
-3 5
-
-// 
-
-
-
-
-
-
-
+    int answer = 0;
+    while(!pq.empty()) {
+        answer += pq.top().second;
+        pq.pop();
+    }
+    cout << answer;
+}
