@@ -1,0 +1,45 @@
+import 'dart:io';
+
+int MAX = 1000001;
+var primeNumber = List.filled(MAX, 0, growable: false);
+var answer = "";
+
+void main()
+{
+    FindPrimeNumber();
+
+    while(true) {
+        var n = int.parse(stdin.readLineSync()!);
+        if(n == 0) break;
+        var a = -1, b = -1;
+
+        for(int i = 1; i < n; i += 2) {
+            if(primeNumber[i] != 0 && primeNumber[n-i] != 0) {
+                a = i;
+                b = n-i;
+                break;
+            }
+        }
+
+        if(a == -1 && b == -1) {
+            answer += "Goldbach's conjecture is wrong.\n";
+        }
+        else {
+            answer += '$n = $a + $b\n';
+        }
+    }
+
+    print(answer);
+}
+
+void FindPrimeNumber() {
+    for(int i = 2; i < MAX; i++) {
+        primeNumber[i] = i;
+    }
+    for(int i = 2; i*i < MAX; i++) {
+        if(primeNumber[i] == 0) continue;
+        for(int j = i*i; j < MAX; j += i) {
+            primeNumber[j] = 0;
+        }
+    }
+}

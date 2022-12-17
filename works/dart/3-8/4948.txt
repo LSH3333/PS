@@ -1,0 +1,35 @@
+import 'dart:io';
+
+int MAX = (123456 * 2) + 10;
+var primeNumber = List.filled(MAX, 0, growable: false);
+var answer = "";
+
+void main()
+{
+    FindPrimeNumber();
+
+    while(true) {
+        var n = int.parse(stdin.readLineSync()!);
+        if(n == 0) break;
+        var cnt = 0;
+
+        for(int i = n+1; i <= 2*n; i++) {
+            if(primeNumber[i] != 0) cnt++;
+        }
+        answer += '$cnt\n';
+    }
+
+    print(answer);
+}
+
+void FindPrimeNumber() {
+    for(int i = 2; i < MAX; i++) {
+        primeNumber[i] = i;
+    }
+    for(int i = 2; i*i < MAX; i++) {
+        if(primeNumber[i] == 0) continue;
+        for(int j = i*i; j < MAX; j += i) {
+            primeNumber[j] = 0;
+        }
+    }
+}
