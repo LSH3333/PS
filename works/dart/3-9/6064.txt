@@ -1,0 +1,24 @@
+import 'dart:io';
+void main()
+{
+    var t = int.parse(stdin.readLineSync()!);
+    var answer = "";
+
+    while(t-- > 0) {
+        var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+        var m = ip[0], n = ip[1], x = ip[2], y = ip[3];
+        var a = 0, b = 0, add = y-1, cnt = 1;
+
+        while(cnt <= m * n) {
+            if(a == x-1 && b == y-1) break;
+            cnt += add;
+            a = (a + add) % m;
+            b = (b + add) % n;
+            add = n;
+        }
+
+        var ans = cnt > m * n ? -1 : cnt;
+        answer += '$ans\n';
+    }
+    print(answer);
+}

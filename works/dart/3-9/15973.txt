@@ -1,0 +1,32 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var x1 = ip[0], y1 = ip[1], x2 = ip[2], y2 = ip[3];
+    ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var x3 = ip[0], y3 = ip[1], x4 = ip[2], y4 = ip[3];
+
+    var answer = "";
+    var x = getState(x1, x2, x3, x4);
+    var y = getState(y1, y2, y3, y4);
+
+    if(x == 0 || y == 0) {
+        answer = "NULL";
+    }
+    else if(x == 1) {
+        y == 1 ? answer = "POINT" : answer = "LINE";
+    }
+    else if(x == 2) {
+        y == 1 ? answer = "LINE" : answer = "FACE";
+    }
+
+    print(answer); 
+}
+
+int getState(int v1, int v2, int v3, int v4) {
+    if(v2 < v3 || v4 < v1) return 0;
+    else if(v2 == v3 || v4 == v1) return 1;
+    return 2;
+}

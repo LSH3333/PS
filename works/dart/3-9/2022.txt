@@ -1,0 +1,22 @@
+import 'dart:io';
+import 'dart:math';
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => double.parse(o)).toList();
+    double x = ip[0], y = ip[1], c = ip[2];
+    double left = 0.0, right = min(x, y);
+
+    for(int i = 0; i < 10000; i++) {
+        var d = (left + right) / 2;
+        var h1 = sqrt(x * x - d * d);
+        var h2 = sqrt(y * y - d * d);
+        var h = (h1 * h2) / (h1 + h2);
+
+        if(h > c) left = d;
+        else right = d;
+    }
+
+    print(left.toStringAsFixed(3));
+
+}

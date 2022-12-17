@@ -1,0 +1,23 @@
+import 'dart:io';
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').toList();
+    var n = ip[0], m = ip[1];
+    while(n.length != m.length) {
+        n = "0" + n;
+    }
+
+    var cnt = 0;
+    var _n = n, _m = m;
+    
+    for(int i = n.length-1; i >= 0; i--) {
+        if(n[i] == '8' && m[i] == '8') {
+          n = n.substring(0, i) + '9' + n.substring(i+1);
+          if(int.parse(n) > int.parse(m)) { cnt++; }
+          else {n = _n; m = _m;}
+        }
+    }
+
+    print(cnt);
+}
