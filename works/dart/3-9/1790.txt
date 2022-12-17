@@ -1,0 +1,59 @@
+import 'dart:io';
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var n =  ip[0], k = ip[1];
+
+    if(getlength(n) < k) {
+        print(-1);
+    }
+    else {
+        var l = 0, m = 0, s = 0, e = 0, cc = 0;
+
+        do {
+            l++;
+            m = (m == 0) ? 1 : m * 10;
+            s = e;
+            e += 9 * m * l;
+        } while(k > e);
+
+        var number = m + (k-s) ~/ l;
+        var index = (k - s) % l;
+
+        if(index == 0) {
+            number -= 1;
+            index = l;
+        }
+
+        var res = 0;
+        do {
+            res = number ~/ m;
+            number -= res * m;
+            m ~/= 10;
+        } while(--index > 0);
+
+        print(res);
+    }
+
+}
+
+int len(int n) {
+    var res = 0;
+    while(n > 0) {
+        res++;
+        n ~/= 10;
+    }
+    return res;
+}
+
+int getlength(int n) {
+    var length = len(n);
+    var i = 0, m = 1, res = 0;
+    for(i = 1; i < length; i++) {
+        res += 9 * m * i;
+        m *= 10;
+    }
+    res += (n - m + 1) * i;
+    return res;
+}
