@@ -1,0 +1,28 @@
+import 'dart:io';
+
+int dfs(int distance, int moved, int cnt) {
+  if(distance == 0) return cnt;
+
+  for(int move = moved+1; move >= moved-1; move--) {
+    if(move <= 0) continue;
+    int sum = (move * (move + 1)) ~/ 2;
+    if(sum <= distance) {
+      return dfs(distance-move, move, cnt+1);
+    }
+  }
+  return -1;
+}
+
+void main() {
+  var answer = "";
+  var t = int.parse(stdin.readLineSync()!);
+  while(t-- > 0) {
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var x = ip[0], y = ip[1];
+    var distance = y - x;
+    var ans = dfs(distance, 0, 0);
+    answer += '$ans\n';
+  }
+  print(answer);
+}
+

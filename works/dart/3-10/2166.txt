@@ -1,0 +1,26 @@
+import 'dart:io';
+import 'dart:math';
+
+var cord = List.generate(10001, (index) => List.generate(2, (_) => 0.0));
+
+void main() {
+  var n = int.parse(stdin.readLineSync()!);
+  var sum = 0.0;
+  for(int i = 0; i < n; i++) {
+    var ip = stdin.readLineSync()!.split(' ').map((o) => double.parse(o)).toList();
+    cord[i][0] = ip[0];
+    cord[i][1] = ip[1];
+  }
+  
+  for(int i = 1; i < n-1; i++) {
+    sum += CCW(cord[0][0], cord[0][1], cord[i][0], cord[i][1], cord[i+1][0], cord[i+1][1]);
+  }
+
+  print(sum.abs().toStringAsFixed(1));
+}
+
+double CCW(double x1, double y1, double x2, double y2, double x3, double y3) {
+  double a = x1*y2 + x2*y3 + x3*y1;
+  double b = x2*y1 + x3*y2 + x1*y3;
+  return (a-b)/2;
+}

@@ -1,0 +1,26 @@
+import 'dart:io';
+
+void main() {
+  var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+  int gcd = ip[0], lcm = ip[1];
+  int a = 0, b = 0;
+
+  lcm ~/= gcd;
+  for(int i = 1; i * i <= lcm; i++) {
+    if(lcm % i != 0) continue;
+    int a_tmp = i;
+    int b_tmp = lcm ~/ i;
+
+    if(GCD(a_tmp, b_tmp) == 1) {
+      a = a_tmp;
+      b = b_tmp;
+    }
+  }
+
+  print('${a*gcd} ${b*gcd}');
+}
+
+int GCD(int a, int b) {
+  if(b == 0) return a;
+  return GCD(b, a%b);
+}
