@@ -1,0 +1,22 @@
+import 'dart:io';
+
+void main()
+{
+    var n = int.parse(stdin.readLineSync()!);
+    var len = 1, val = n, cnt = 0, num = 1;
+
+    while(val > 0) {
+        if(val ~/ 10 == 0) {
+            cnt += (n - len + 1) * num;
+            break;
+        }
+        else {
+            cnt += 9 * len * num;
+            len *= 10;
+            num++;
+            val = val ~/ 10;
+        }
+    }
+
+    print(cnt);
+}
