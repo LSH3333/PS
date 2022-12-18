@@ -1,0 +1,106 @@
+import 'dart:io';
+
+var before = new List.filled( 301,
+    new List.filled(0, 0, growable: false),
+    growable: false);
+var after = List.generate(301, (index) => List.generate(301, (_) => 0));
+var N = 0, M = 0, R = 0;
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    N = ip[0]; M = ip[1]; R = ip[2];
+    for(int r = 0; r < N; r++) {
+        before[r] = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    }
+
+    var r = 0, c = 0, H = N, W = M;
+    while(true) {
+        CalOneRec(r, c, H, W);
+        r++; c++;
+        H-=2; W-=2;
+        if(H < 2 || W < 2) break;
+    }
+
+    Print();
+}
+
+void CalPosition(int r, int c, int idx, List v) {
+    int num = before[r][c];
+    v[(idx + R) % v.length] = num;
+}
+
+void CalOneRec(int _r, int _c, int H, int W) {
+    int length = (H + W) * 2 - 4;
+    var v = List.filled(length, 0);
+    int r = _r, c = _c, idx = 0;
+
+    // down
+    for(; r < _r+H; r++, idx++)
+    {
+        CalPosition(r, c, idx, v);
+    }
+    r--;
+
+    // right
+    for(c = c+1; c < _c+W; c++, idx++)
+    {
+        CalPosition(r, c, idx, v);
+    }
+    c--;
+
+    // up
+    for(r = r-1; r >= _r; r--, idx++)
+    {
+        CalPosition(r, c, idx, v);
+    }
+    r++;
+
+    // left
+    for(c = c-1; c >= _c; c--, idx++)
+    {
+        CalPosition(r, c, idx, v);
+    }
+
+
+    //
+    r = _r; c = _c;
+    idx = 0;
+    // down
+    for(; r < _r+H; r++, idx++)
+    {
+    after[r][c] = v[idx];
+    }
+    r--;
+
+    // right
+    for(c = c+1; c < _c+W; c++, idx++)
+    {
+    after[r][c] = v[idx];
+    }
+    c--;
+
+    // up
+    for(r = r-1; r >= _r; r--, idx++)
+    {
+    after[r][c] = v[idx];
+    }
+    r++;
+
+    // left
+    for(c = c-1; c >= _c+1; c--, idx++)
+    {
+    after[r][c] = v[idx];
+    }
+}
+
+void Print() {
+    var answer = "";
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j < M; j++) {
+            answer += '${after[i][j]} ';
+        }
+        answer += '\n';
+    }
+    print(answer);
+}

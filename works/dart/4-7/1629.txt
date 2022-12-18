@@ -1,0 +1,21 @@
+import 'dart:io';
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var A = ip[0], B = ip[1], C = ip[2];
+    print(dfs(A,B,C));
+}
+
+int dfs(int a, int b, int c) {
+    if(b == 1) {
+        return a % c;
+    }
+    int n = dfs(a, b~/2, c);
+    if(b % 2 == 0) {
+        return (n * n) % c;
+    }
+    else {
+        return (((n * n) % c) * a) % c;
+    }
+}

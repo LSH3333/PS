@@ -1,0 +1,55 @@
+import 'dart:io';
+
+void main()
+{
+    var N = int.parse(stdin.readLineSync()!);
+    var prev = List.generate(1, (index) => List.generate(1, (_) => '*'));
+    recur(N, 3, prev);
+}
+
+void Print(List prev) {
+    var answer = "";
+    for(var x in prev) {
+        for(var y in x) {
+            answer += y;
+        }
+        answer += '\n';
+    }
+    print(answer);
+}
+
+void recur(int N, int n, List prev) {
+    if(n > N) {
+        Print(prev);
+        return;
+    }
+
+    var board = List.generate(n, (index) => List.generate(n, (_) => ' '));
+
+    int r = 0, c = 0;
+    for(int cnt = 0; cnt < 9; cnt++)
+    {
+        if(cnt != 4)
+        {
+            for(int i = r; i < r+n/3; i++)
+            {
+                for(int j = c; j < c+n/3; j++)
+                {
+                    board[i][j] = prev[i-r][j-c];
+                }
+            }
+        }
+
+        if(c+n/3 >= n)
+        {
+            r = r + n ~/ 3;
+            c = 0;
+        }
+        else
+        {
+            c = c + n ~/ 3;
+        }
+    }
+
+    recur(N, n*3, board);
+}
