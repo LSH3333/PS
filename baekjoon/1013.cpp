@@ -1,76 +1,68 @@
 #include <iostream>
-#include <string>
 using namespace std;
 
-int CountZero(const string &str) {
-    int cnt = 0;
-    for(int i = 1; i < str.size(); i++) {
-        if(str[i] == '0') cnt++;
-        else break;
-    }
-    return cnt;
-}
-
-int CountOne(const string &str) {
-    int cnt = 0;
-    for(int i = 1; i < str.size(); i++) {
-        if(str[i] == '1') cnt++;
-        else break;
-    }
-    return cnt;
-}
 
 
 int main() {
-    ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+//    ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
     int T; cin >> T;
     while(T--) {
-        bool can = true;
         string str; cin >> str;
+        int state = 0;
 
-        while(!str.empty()) {
-            cout << str << endl;
-            if (str.front() == '0') {
-                if(str[1] == '0') { can = false; break; }
-                else { str = str.substr(2); }
+        for (int i = 0; i < str.size(); i++) {
+            char c = str[i];
+
+            if(state == 0) {
+                if(c == '0') state = 1;
+                else state = 3;
             }
-            else { // 1
-                // 1 이후 최소 2개의 0 필요
-                int cnt = CountZero(str);
-                if(cnt < 2) { can = false; break; }
-                // 1..
-                str = str.substr(cnt+1);
-                for(int i = 0; i < str.size(); i++) {
-                    if(str[i] == '1') cnt++;
-                    else break;
-                }
-                // 마지막 1 남기고 이전 1 지굼
-                str = str.substr(cnt-1);
-                cout << "2: " << str << endl;
-
-                // 1..
-                if(str.size() == 1) {
-                    break;
-                }
-                if(str[1] == '0') {
-                    str = str.substr(1);
-                }
-                else {
-                    cnt = CountOne(str);
-                    string tmp = str.substr(cnt); // 0..
-                    int zeroCnt = 0;
-                    for(int i = 0; i < tmp.size(); i++) {
-                        if(tmp[i] == '0') zeroCnt++;
-                        else break;
-                    }
-
-                    if(zeroCnt == 1) str = tmp;
-                    else str = str.substr(cnt-1);
-                }
+            else if(state == 1) {
+                if(c == '0') state = -1;
+                else state = 2;
             }
+            else if(state == 2) {
+                if(c == '0') state = 1;
+                else state = 3;
+            }
+            else if(state == 3) {
+                if(c == '0') state = 4;
+                else state = -1;
+            }
+            else if(state == 4) {
+                if(c == '0') state = 5;
+                else state = -1;
+            }
+            else if(state == 5) {
+                if(c == '0') state = 5;
+                else state = 6;
+            }
+            else if(state == 6) {
+                if(c == '0') state = 1;
+                else state = 7;
+            }
+            else if(state == 7) {
+                if(c == '0') state = 8;
+                else state = 7;
+            }
+            else if(state == 8) {
+                if(c == '0') state = 5;
+                else state = 9;
+            }
+            else if(state == 9) {
+                if(c == '0') state = 1;
+                else state = 3;
+            }
+//            cout << "state: " << c << ' ' <<  state << endl;
         }
 
-        can ? cout << "YES\n" : cout << "NO\n";
+
+        if(state == 2 || state == 6 || state == 7 || state == 9) {
+            cout << "YES\n";
+        }
+        else {
+            cout << "NO\n";
+        }
     }
 
 }
