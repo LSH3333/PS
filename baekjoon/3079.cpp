@@ -1,26 +1,37 @@
 #include <iostream>
-#include <queue>
-#include <deque>
+#include <climits>
 using namespace std;
 
-int N, M;
+long long N, M;
+long long arr[100001];
+long long answer = LONG_MAX;
 
 int main() {
     ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-    // first 기준 min heap
-    priority_queue<pair<long long,long long>, vector<pair<long long,long long>>, greater<>> pq;
     cin >> N >> M;
+    long long minTime = 2000000000;
     for(int i = 0; i < N; i++) {
-        int t; cin >> t;
-        pq.push({t, t});
+        cin >> arr[i];
+        minTime = min(minTime, arr[i]);
     }
 
-    for(int i = 0; i < M-1; i++) {
-        long long time = pq.top().second;
-        long long next = pq.top().first;
-        pq.pop();
-        pq.push({next + time, time});
+    long long left = 1, right = minTime * M;
+    while(left <= right) {
+        long long mid = (left + right) / 2;
+        long long sum = 0;
+        
+        for(int i = 0; i < N; i++) {
+            sum += mid / arr[i];
+        }
+
+        if(sum < M) {
+            left = mid+1;
+        }
+        else {
+            answer = min(answer, mid);
+            right = mid-1;
+        }
     }
 
-    cout << pq.top().first;
+    cout << answer;
 }
