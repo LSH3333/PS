@@ -8,9 +8,9 @@ int N, M;
 int main() {
     ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
     cin >> N;
-    vector<int> crane(N);
+    vector<int> cranes(N);
     for(int i = 0; i < N; i++) {
-        cin >> crane[i];
+        cin >> cranes[i];
     }
     cin >> M;
     vector<int> box(M);
@@ -18,18 +18,27 @@ int main() {
         cin >> box[i];
     }
 
-    sort(crane.begin(), crane.end());
-    sort(box.begin(), box.end());
+    sort(cranes.begin(), cranes.end(), greater<>());
+    sort(box.begin(), box.end(), greater<>());
 
-    for(auto x : crane) cout << x << ' '; cout << endl;
-    for(auto x : box) cout << x << ' '; cout << endl; cout << endl;
-
-    int idx = 0;
-    while(idx < M) {
-        for(int i = 0; i < N; i++) {
-            for(int j = idx; j < M; j++) {
-                if(crane[i] >= box[j]) { idx = j + 1; break; }
+    vector<bool> mark(M, false);
+    int t = 0, cnt = 0;
+    while(cnt < M) {
+        t++;
+        int i = 0;
+        bool found = false;
+        for(auto crane : cranes) {
+            for(; i < M; i++) {
+                if(crane >= box[i] && !mark[i]) {
+                    mark[i] = true;
+                    cnt++; found = true;
+                    break;
+                }
             }
         }
+        if(!found) {
+            cout << -1; exit(0);
+        }
     }
+    cout << t;
 }
