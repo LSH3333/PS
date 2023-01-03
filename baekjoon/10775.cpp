@@ -12,14 +12,10 @@ int GetParent(int n) {
 
 bool GetLoc(int n) {
     int p = GetParent(n);
-    if(p == 0) {
-        return false;
-    }
-    else {
-        parent[n] = p-1;
-        parent[p] = p-1;
-        return true;
-    }
+    if(p == 0) return false;
+    int pp = GetParent(p)-1;
+    parent[max(p, pp)] = min(p, pp);
+    return true;
 }
 
 int main() {
