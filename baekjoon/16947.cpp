@@ -1,33 +1,56 @@
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <cstring>
 using namespace std;
 
 int N;
+bool cycle[3010];
 bool cycleNode[3010];
+bool markEdge[3010][3010];
 vector<int> edges[3010];
-// 방문한적 없는 엣지를 거쳐서, 방문한적 있는 노드에 도달한 경우 -> 사이클
 
-void Print() {
-    for(int i = 1; i <= N; i++) {
-        cout << cycleNode[i] << ' ';
-    } cout << endl;
-}
 
 bool trigger;
 void dfs(int startNode, int node) {
-    cout << "cur: " << node << endl;
-    Print();
+    cycleNode[node] = true;
+
+//    cout << "cur: " << node << "   " << "trigger: " << trigger << endl;
+//    Print();
+
     for (auto next: edges[node]) {
-        if (next != startNode && !cycleNode[next]) {
-            cycleNode[next] = true;
-            dfs(startNode, next);
-        }
-        if(next == startNode) {
-            return;
+        if(trigger) return;
+        if(markEdge[node][next]) continue;
+        if(next == startNode) { trigger = true; return; }
+        markEdge[node][next] = true;
+        markEdge[next][node] = true;
+        dfs(startNode, next);
+    }
+
+    if(!trigger) cycleNode[node] = false;
+}
+
+bool visited[3010];
+int CalDist(int startNode) {
+    if(cycle[startNode]) return 0;
+    queue<pair<int,int>> q;
+    memset(visited, false, sizeof(visited));
+    q.push({startNode, 0});
+    visited[startNode] = true;
+
+    while (!q.empty()) {
+        int cur = q.front().first;
+        int depth = q.front().second;
+        q.pop();
+
+        for (auto next: edges[cur]) {
+            if(cycle[next]) return depth+1;
+            if(visited[next]) continue;
+            visited[next] = true;
+            q.push({next, depth + 1});
         }
     }
 
-    cycleNode[node] = false;
 }
 
 int main() {
@@ -39,8 +62,18 @@ int main() {
         edges[b].push_back(a);
     }
 
-    dfs(4, 4);
+    for(int startNode = 1; startNode <= N; startNode++) {
+        if(cycle[startNode]) continue;
+        trigger = false;
+        dfs(startNode, startNode);
+        for(int i = 1; i <= N; i++) {
+            if(cycleNode[i]) cycle[i] = true;
+        }
+        memset(markEdge, false, sizeof(markEdge));
+    }
 
-
+    for(int i = 1; i <= N; i++) {
+        cout << CalDist(i) << ' ';
+    }
 
 }
