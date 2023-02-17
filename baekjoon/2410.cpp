@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cmath>
 using namespace std;
 
 #define MAX 1000000
@@ -14,22 +13,20 @@ int main() {
     cin >> N;
 
     d[0][0] = 1;
-    d[1][0] = 1;
-
-    for(int i = 2; i <= N; i++) {
-        for (int j = 0; i-pow(2,j) >= 0 ; j++) {
-            int sum = 0;
+    for(int i = 1; i <= N; i++) {
+        int sub = 1;
+        for (int j = 0; i-sub >= 0 ; j++) {
             for(int k = 0; k <= j; k++) {
-                sum += d[i - (int)pow(2,j)][k] % MOD;
+                d[i][j] = (d[i][j] + d[i - sub][k]) % MOD;
             }
-            d[i][j] = sum % MOD;
+            sub *= 2;
         }
     }
 
     int answer = 0;
     for(int i = 0; i < 22; i++) {
-        answer += d[N][i] % MOD;
+        answer = (answer + d[N][i]) % MOD;
     }
-    cout << answer % MOD;
+    cout << answer;
 
 }
