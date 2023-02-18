@@ -1,0 +1,43 @@
+import 'dart:io';
+import 'dart:math';
+
+int N = 0, M = 0, answer = 1000000000;
+
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    N = ip[0];
+    M = ip[1];
+    var arr = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+
+    int left = 0, right = 1000000000;
+    while(left <= right) {
+        int mid = (left + right) ~/ 2;
+
+        int sum = 0, cnt = 0;
+        int i = 0;
+        while(i < N) {
+            for(; i < N; i++) {
+                sum += arr[i];
+                if(sum > mid) break;
+            }
+            sum = 0;
+            cnt++;
+            if(cnt > M) break;
+        }
+
+        if(cnt <= M) {
+            answer = min(answer, mid);
+            right = mid - 1;
+        }
+        else {
+            left = mid + 1;
+        }
+    }
+
+    print(answer);
+}
+
+
+

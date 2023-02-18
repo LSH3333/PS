@@ -1,0 +1,36 @@
+import 'dart:io';
+import 'dart:math';
+
+var N;
+var answer = 0;
+
+void main()
+{
+    N = int.parse(stdin.readLineSync()!);
+    var v = [];
+    for(int i = 0; i < N; i++) {
+        var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+        v.add([ip[0], ip[1]]);
+    }
+
+    v.sort((a,b) => a[0]-b[0]);
+
+    int begin = v[0][0], end = v[0][1];
+    for(int i = 1; i < v.length; i++) {
+        var x = v[i][0], y = v[i][1];
+        if(x <= end) {
+            end = max(y, end);
+        }
+        else {
+            answer += (end - begin);
+            begin = x;
+            end = y;
+        }
+    }
+
+    answer += (end - begin);
+    print(answer);
+}
+
+
+

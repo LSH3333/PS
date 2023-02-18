@@ -1,0 +1,96 @@
+import 'dart:io';
+import 'dart:math';
+
+int N = 0;
+var order = List.generate(N*N, (index) => 0);
+var like = List.generate(410, (index) => List.generate(410, (index) => 0));
+var board = List.generate(21, (index) => List.generate(21, (index) => 0));
+var dr = [-1, 0, 1, 0];
+var dc = [0, 1, 0, -1];
+
+void main()
+{
+    N = int.parse(stdin.readLineSync()!);
+
+    for(int i = 0; i < N*N; i++) {
+        var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+        int student = ip[0];
+        order[i] = student;
+
+        for(int j = 1; j <= 4; j++) {
+            int who = ip[j];
+            like[student][who] = 1;
+        }
+    }
+
+    // 자리 구함
+    order.forEach((student) => { CalPos(student) });
+    // 만족도 구함
+    print(Cal());
+}
+
+void CalPos(int student) {
+    var v = List.generate(N, (index) =>
+            List.generate(N, (index) =>
+            List.generate(2, (index) => 0)));
+    int maxLike = 0;
+
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j < N; j++) {
+            if(board[i][j] != 0) continue;
+            int likeCnt = 0, empty = 0;
+            for(int dir = 0; dir < 4; dir++) {
+                int nr = i + dr[dir];
+                int nc = j + dc[dir];
+                if(nr < 0 || nr >= N || nc < 0 || nc >= N) continue;
+                if(board[nr][nc] == 0) empty++;
+                else likeCnt += like[student][board[nr][nc]];
+            }
+            maxLike = max(maxLike, likeCnt);
+            v[i][j][0] = likeCnt;
+            v[i][j][1] = empty;
+        }
+    }
+
+    int maxEmpty = -1;
+    int rPos = 0, cPos = 0;
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j < N; j++) {
+            if(board[i][j] != 0) continue;
+            if(v[i][j][0] != maxLike) continue;
+            if(v[i][j][1] > maxEmpty) {
+                maxEmpty = v[i][j][1];
+                rPos = i;
+                cPos = j;
+            }
+        }
+    }
+
+    board[rPos][cPos] = student;
+}
+
+int Cal() {
+    int sum = 0;
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j < N; j++) {
+            int student = board[i][j];
+            int likeCnt = 0;
+
+            for(int dir = 0; dir < 4; dir++) {
+                int nr = i + dr[dir];
+                int nc = j + dc[dir];
+                if(nr < 0 || nr >= N || nc < 0 || nc >= N) continue;
+                likeCnt += like[student][board[nr][nc]];
+            }
+
+            if(likeCnt == 0) sum += 0;
+            else if(likeCnt == 1) sum += 1;
+            else if(likeCnt == 2) sum += 10;
+            else if(likeCnt == 3) sum += 100;
+            else sum += 1000;
+        }
+    }
+    return sum;
+}
+
+

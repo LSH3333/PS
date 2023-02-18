@@ -1,0 +1,46 @@
+import 'dart:io';
+import 'dart:math';
+
+var N, C, answer = 0;
+
+void main()
+{
+    var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    N = ip[0];
+    C = ip[1];
+
+    var v = [];
+    for(int i = 0; i < N; i++) {
+        v.add(int.parse(stdin.readLineSync()!));
+    }
+
+    v.sort((a,b) => a-b);
+
+    int left = 1, right = v[N-1] - v[0];
+    while(left <= right) {
+        int mid = (left + right) ~/ 2;
+        int cnt = 1;
+        int start = v[0];
+
+        for(int i = 1; i < N; i++) {
+            if(mid <= v[i] - start) {
+                cnt++;
+                start = v[i];
+            }
+        }
+
+        if(cnt >= C) {
+            left = mid + 1;
+            answer = mid;
+        }
+        else {
+            right = mid - 1;
+        }
+    }
+
+    print(answer);
+
+}
+
+
+
