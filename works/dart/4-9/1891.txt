@@ -1,0 +1,93 @@
+import 'dart:io';
+import 'dart:math';
+
+// var board = List.generate(21, (index) => List.generate(21, (index) => 0));
+
+var beginR, beginC, endR, endC;
+var answer = "";
+
+void main()
+{
+    var _ip = stdin.readLineSync()!.split(' ');
+    var d = int.parse(_ip[0]);
+    var ip = _ip[1];
+    var toRight, toUp, len;
+
+    _ip = stdin.readLineSync()!.split(' ');
+    toRight = int.parse(_ip[0]);
+    toUp = int.parse(_ip[1]);
+    len = pow(2, ip.length);
+
+    FindPos(ip, 0, len, 0, 0);
+
+    // 도착한 사분면 위치
+    endR = beginR + toUp * -1;
+    endC = beginC + toRight;
+
+    // 존재하지 않는 사분면인 경우
+    if(endR < 0 || endR >= len || endC < 0 || endC >= len) {
+        print(-1);
+    }
+    else {
+        FindQuadrant(len, 0, 0);
+        print(answer);
+    }
+
+
+}
+
+
+void FindPos(String ip, int idx, int len, int _r, int _c) {
+    if(idx >= ip.length) {
+        beginR = _r;
+        beginC = _c;
+        return;
+    }
+
+    var pos = int.parse(ip[idx]);
+
+    if(pos == 1) {
+        FindPos(ip, idx+1, len~/2, _r, _c + len ~/ 2);
+    }
+    else if(pos == 2) {
+        FindPos(ip, idx+1, len~/2, _r, _c);
+    }
+    else if(pos == 3) {
+        FindPos(ip, idx+1, len~/2, _r + len ~/ 2, _c);
+    }
+    else {
+        FindPos(ip, idx + 1, len ~/ 2, _r + len ~/ 2, _c + len ~/ 2);
+    }
+}
+
+void FindQuadrant(int len, int _r, int _c) {
+    if(len == 1) {
+        return;
+    }
+
+    var subR = endR - _r;
+    var subC = endC - _c;
+
+    var lenDiv2 = len ~/ 2;
+
+    // 2
+    if(subR < lenDiv2 && subC < lenDiv2) {
+        answer += "2";
+        FindQuadrant(lenDiv2, _r, _c);
+    }
+    // 1
+    else if(subR < lenDiv2 && subC >= lenDiv2) {
+        answer += "1";
+        FindQuadrant(lenDiv2, _r, _c + lenDiv2);
+    }
+    // 3
+    else if(subR >= lenDiv2 && subC < lenDiv2) {
+        answer += "3";
+        FindQuadrant(lenDiv2, _r + lenDiv2, _c);
+    }
+    else {
+        answer += "4";
+        FindQuadrant(lenDiv2, _r + lenDiv2, _c + lenDiv2);
+    }
+}
+
