@@ -1,0 +1,32 @@
+import 'dart:io';
+import 'dart:math';
+
+// var board = List.generate(21, (index) => List.generate(21, (index) => 0));
+
+
+void main()
+{
+    var _ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var N=0, S=0, answer = 200000;
+    N = _ip[0];
+    S = _ip[1];
+    var arr = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    var left = 0, right = 0, sum = arr[0];
+
+    while(left <= right && right < N) {
+        if(sum >= S) {
+            answer = min(answer, right-left+1);
+            sum -= arr[left++];
+        }
+        else {
+            if(right+1 >= N) break;
+            sum += arr[++right];
+        }
+
+    }
+
+    if(answer == 200000) print(0);
+    else print(answer);
+
+}
+
