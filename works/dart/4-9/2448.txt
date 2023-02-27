@@ -1,0 +1,47 @@
+import 'dart:io';
+
+
+int N = 0, H = 0, W = 0;
+
+void main()
+{
+    N = int.parse(stdin.readLineSync()!);
+    H = N;
+    W = 2 * H - 1;
+    var arr = List.generate(H, (index) => List.generate(W, (index) => ' '));
+
+    MakeTriangle(3, 0, W~/2-1, arr);
+    Print(arr);
+}
+
+void MakeTriangle(int n, int _r, int _c, List arr) {
+    if(n > N) return;
+
+    if(n == 3) {
+        int w = W ~/ 2;
+        arr[0][w] = '*';
+        arr[1][w-1] = '*'; arr[1][w+1] = '*';
+        for(int i = w-2; i <= w+2; i++) arr[2][i] = '*';
+        MakeTriangle(n*2, 0, w-2, arr);
+    }
+    else {
+        int div = n ~/ 2;
+        for(int r = _r; r < _r + div; r++) {
+            for(int c = _c; c < _c + (div*2-1); c++) {
+                arr[r+div][c-div] = arr[r][c];
+                arr[r+div][c+div] = arr[r][c];
+            }
+        }
+        MakeTriangle(n*2, 0, _c - div, arr);
+    }
+}
+
+void Print(List arr) {
+    for(int i = 0; i < H; i++) {
+        var answer = "";
+        for(int j = 0; j < W; j++) {
+            answer += arr[i][j];
+        }
+        print(answer);
+    }
+}
