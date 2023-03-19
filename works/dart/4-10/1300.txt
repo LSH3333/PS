@@ -1,0 +1,43 @@
+import 'dart:io';
+
+int N = 0, K = 0, answer = 0;
+var arr = List.generate(1200, (index) => List.generate(2400, (index) => ' '));
+
+void main()
+{
+    N = int.parse(stdin.readLineSync()!);
+    K = int.parse(stdin.readLineSync()!);
+
+    var left = 1, right = N * N;
+    while(left <= right) {
+        var mid = (left + right) ~/ 2;
+
+        var cnt = Count(mid);
+
+        if(cnt < K) {
+            left = mid + 1;
+        }
+        else {
+            right = mid - 1;
+            answer = mid;
+        }
+    }
+
+    print(answer);
+
+}
+
+int Count(int mid) {
+    var cnt = 0;
+
+    for(int i = 1; i <= N; i++) {
+        if (i * N <= mid) {
+            cnt += N;
+        }
+        else {
+            cnt += mid ~/ i;
+        }
+    }
+
+    return cnt;
+}
