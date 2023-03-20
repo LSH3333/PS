@@ -1,0 +1,63 @@
+import 'dart:collection';
+import 'dart:io';
+import 'dart:math';
+
+var N, M, fac1, fac2;
+var bridge = List.generate(100010, (index) => []);
+
+void main()
+{
+    var input = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+
+    N = input[0]; M = input[1];
+    var left = 0, right = 0;
+    for(int i = 0; i < M; i++) {
+        input = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+        var a = input[0], b = input[1], c = input[2];
+        bridge[a].add([b,c]);
+        bridge[b].add([a,c]);
+        right = max(right, c);
+    }
+    input = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    fac1 = input[0]; fac2 = input[1];
+
+    var ans = (left + right) ~/ 2;
+    while(left <= right) {
+        var mark = List.generate(N+1, (index) => false);
+
+        var mid = (left + right) ~/ 2;
+        if(bfs(mid, mark)) {
+            ans = mid;
+            left = mid + 1;
+        }
+        else {
+            right = mid - 1;
+        }
+    }
+    
+    print(ans);
+}
+
+bool bfs(int mid, List mark) {
+    var q = Queue<int>();
+    q.addLast(fac1);
+    mark[fac1] = true;
+
+    while(q.isNotEmpty) {
+        var node = q.removeFirst();
+
+        if(node == fac2) return true;
+
+        bridge[node].forEach((element) {
+           var next_node = element[0];
+           var next_w = element[1];
+
+           if(!mark[next_node] && next_w >= mid) {
+               mark[next_node] = true;
+               q.addLast(next_node);
+           }
+        });
+    }
+
+    return false;
+}
