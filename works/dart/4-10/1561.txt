@@ -1,0 +1,61 @@
+import 'dart:collection';
+import 'dart:io';
+
+const MAX = 10000;
+var N = 0, M = 0;
+var attraction;
+
+void main()
+{
+    var input = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    N = input[0]; M = input[1];
+    attraction = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+
+    if(N <= M) {
+        print(N);
+    }
+    else {
+        var answerTime = 0, answerCnt = 0;
+        var left = 1, right = 2000000000 * 30;
+
+        while(left <= right) {
+            var mid = (left + right) ~/ 2;
+            var cnt = Count(mid);
+
+            if(cnt >= N) {
+                right = mid - 1;
+            }
+            else {
+                left = mid + 1;
+                answerTime = mid;
+                answerCnt = cnt;
+            }
+        }
+
+        print(CalAnswer(answerTime, answerCnt) + 1);
+    }
+
+}
+
+int Count(int time) {
+    var cnt = 0;
+    for(int i = 0; i < M; i++) {
+        cnt += time ~/ attraction[i];
+        if(time % attraction[i] != 0) cnt++;
+    }
+    return cnt;
+}
+
+int CalAnswer(int time, int cnt) {
+   for(int i = 0; i < M; i++) {
+       if(time % attraction[i] == 0) {
+           cnt++;
+       }
+
+       if(cnt == N) {
+           return i;
+       }
+   }
+
+   return 0;
+}
