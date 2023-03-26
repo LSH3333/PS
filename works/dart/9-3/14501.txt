@@ -1,0 +1,33 @@
+import 'dart:io';
+import 'dart:math';
+
+var N = 0, answer = 0;
+var T = List.generate(16, (index) => 0);
+var P = List.generate(16, (index) => 0);
+
+void main()
+{
+    N = int.parse(stdin.readLineSync()!);
+    for(int i = 1; i <= N; i++) {
+        var ip = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+        T[i] = ip[0];
+        P[i] = ip[1];
+    }
+
+    solve(1, 0);
+    print(answer);
+}
+
+void solve(int cur_day, int total_money) {
+    if(cur_day >= N+1) {
+        answer = max(answer, total_money);
+        return;
+    }
+
+    if(cur_day + T[cur_day] <= N+1) {
+        solve(cur_day + T[cur_day], total_money + P[cur_day]);
+    }
+    if(cur_day+1 <= N+1) {
+        solve(cur_day+1, total_money);
+    }
+}
