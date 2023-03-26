@@ -1,0 +1,74 @@
+import 'dart:io';
+import 'dart:math';
+
+int H=0, W=0, N=0;
+var arr = [];
+
+void main()
+{
+    var input = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+    H = input[0]; W = input[1];
+    N = int.parse(stdin.readLineSync()!);
+    for(int i = 0; i < N; i++) {
+        input = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+        int h = input[0], w = input[1];
+        arr.add([h,w]);
+    }
+
+    int answer = 0;
+    for(int i = 0; i < N; i++) {
+        for(int j = i+1; j < N; j++) {
+            if(TryPutStickers(arr[i][0], arr[i][1], arr[j][0], arr[j][1])) {
+              answer = max(answer, arr[i][0]*arr[i][1] + arr[j][0]*arr[j][1]);
+            }
+        }
+    }
+    print(answer);
+}
+
+bool TryPutStickers(int h1, int w1, int h2, int w2) {
+    var mark = List.generate(H, (index) => List.generate(W, (index) => false));
+
+    if(TryPutSticker(h1, w1, mark) && TryPutSticker(h2, w2, mark)) return true;
+    mark = List.generate(H, (index) => List.generate(W, (index) => false));
+
+    if(TryPutSticker(w1, h1, mark) && TryPutSticker(h2, w2, mark)) return true;
+    mark = List.generate(H, (index) => List.generate(W, (index) => false));
+
+    if(TryPutSticker(h1, w1, mark) && TryPutSticker(w2, h2, mark)) return true;
+    mark = List.generate(H, (index) => List.generate(W, (index) => false));
+
+    if(TryPutSticker(w1, h1, mark) && TryPutSticker(w2, h2, mark)) return true;
+
+    return false;
+}
+
+bool TryPutSticker(int h, int w, List mark) {
+    for(int r = 0; r < H; r++) {
+        for(int c = 0; c < W; c++) {
+            if(DoesItFit(r, c, h, w, mark)) {
+                PutSticker(r, c, h, w, mark);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool DoesItFit(int r, int c, int h, int w, List mark) {
+    if(r + h - 1 >= H || c + w - 1 >= W) return false;
+    for(int i = r; i < r + h; i++) {
+        for(int j = c; j < c + w; j++) {
+            if(mark[i][j]) return false;
+        }
+    }
+    return true;
+}
+
+void PutSticker(int r, int c, int h, int w, List mark) {
+    for(int i = r; i < r + h; i++) {
+        for(int j = c; j < c + w; j++) {
+            mark[i][j] = true;
+        }
+    }
+}
