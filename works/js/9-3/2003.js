@@ -7,6 +7,7 @@ let v = input[1].split(' ').map(Number)
 
 let left = 0, right = 0, sum = 0, cnt = 0
 while(right <= v.length) {
+    
     if(sum < M) {
         sum += v[right] 
         right++ 
@@ -17,6 +18,7 @@ while(right <= v.length) {
     }
     else if(sum == M) {
         cnt++ 
+        if(right >= v.length) break 
         sum += v[right];
         right++ 
     }
