@@ -1,0 +1,55 @@
+import 'dart:io';
+
+void main() {
+  int N = int.parse(stdin.readLineSync()!);
+  var arr = stdin.readLineSync()!.split(' ').map((o) => int.parse(o)).toList();
+  var mark = List.generate(N+1, (index) => true);
+
+  bool sorted = true;
+  for(int i = 0; i < N-1; i++) {
+    if(arr[i] > arr[i+1]) {
+      sorted = false;
+      break;
+    }
+  }
+
+  if(sorted) {
+    print(-1);
+  }
+  else {
+    int i = 0;
+    for(i = N-1; i >= 0; i--) {
+      int n = arr[i];
+      mark[n] = false;
+
+      bool found = false;
+      for(int j = n-1; j >= 1; j--) {
+        if(mark[j]) continue;
+        mark[j] = true;
+        arr[i] = j;
+        found = true;
+        break;
+      }
+      if(found) break;
+    }
+
+    i++;
+    while(i < N) {
+      for(int j = N; j >= 1; j--) {
+        if(mark[j]) continue;
+        mark[j] = true;
+        arr[i] = j;
+        break;
+      }
+      i++;
+    }
+
+    var answer = "";
+    for(int i = 0; i < N; i++) {
+      answer += arr[i].toString() + " ";
+    }
+    print(answer);
+  }
+
+}
+
