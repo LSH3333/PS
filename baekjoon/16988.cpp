@@ -16,7 +16,7 @@ void Print() {
 }
 
 int bfs(int _r, int _c, vector<vector<bool>> &visited) {
-    bool surround = true;
+    bool surrounded = true;
     int cnt = 0;
     queue<pair<int,int>> q;
     q.push({_r, _c});
@@ -30,10 +30,8 @@ int bfs(int _r, int _c, vector<vector<bool>> &visited) {
         for(int i = 0; i < 4; i++) {
             int nr = r + dr[i], nc = c + dc[i];
             if(nr < 0 || nr >= N || nc < 0 || nc >= M) continue;
-            // ????? ??
             if(board[nr][nc] == 0) {
-                surround = false;
-//                return 0;
+                surrounded = false;
             }
             else if(board[nr][nc] == 2 && !visited[nr][nc]) {
                 visited[nr][nc] = true;
@@ -42,10 +40,8 @@ int bfs(int _r, int _c, vector<vector<bool>> &visited) {
         }
     }
 
-    if(surround) {
-        return 0;
-    }
-    return cnt;
+    if(!surrounded) return 0;
+    else return cnt;
 }
 
 int FindCnt() {
@@ -54,9 +50,7 @@ int FindCnt() {
     for(int r = 0; r < N; r++) {
         for(int c = 0; c < M; c++) {
             if(board[r][c] == 2 && !visited[r][c]) {
-                cout << "r,c: " << r << ',' << c << endl;
                 int res = bfs(r, c, visited);
-                cout << "res: " << res << endl;
                 cnt += res;
             }
         }
@@ -65,11 +59,9 @@ int FindCnt() {
 }
 
 void PutMyStones(int loc, int depth) {
-    if(depth == 2){
-        Print();
+    if(depth == 2) {
         int cnt = FindCnt();
         answer = max(answer, cnt);
-        cout << cnt << endl;
         return;
     }
 
