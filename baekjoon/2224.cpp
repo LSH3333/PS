@@ -1,24 +1,23 @@
 #include <iostream>
 #include <algorithm>
-#include <set>
 #include <vector>
 using namespace std;
 
 int N;
-vector<int> edges[130];
-//vector<pair<char,char>> answers;
-set<pair<char,char>> answer;
+bool edges[130][130];
 
-void dfs(string &res, int cur) {
-    res.push_back(char(cur));
-
-    for(int i = 0; i < res.size()-1; i++) {
-//        answers.push_back({res[i], res.back()});
-        answer.insert({res[i], res.back()});
-    }
-
-    for (auto next: edges[cur]) {
-        dfs(res, next);
+void FloydWarshall() {
+    for(int k = 'A'; k <= 'z'; k++) {
+        if(k > 90 && k < 97) continue;
+        for(int i = 'A'; i <= 'z'; i++) {
+            if(i > 90 && i < 97) continue;
+            for(int j = 'A'; j <= 'z'; j++) {
+                if(j > 90 && j < 97) continue;
+                if (!edges[i][j]) {
+                    edges[i][j] = edges[i][k] && edges[k][j];
+                }
+            }
+        }
     }
 }
 
@@ -32,28 +31,31 @@ int main() {
     for(int i = 0; i < N; i++) {
         string line;
         getline(cin, line);
-        char p = line.front(), q = line.back();
-        edges[int(p)].push_back(int(q));
+        unsigned char p = line.front(), q = line.back();
+        edges[int(p)][int(q)] = true;
+        edges[int(p)][int(p)] = true;
     }
 
-    for(int i = 'A'; i <= 'Z'; i++) {
-        string res;
-        dfs(res, i);
-    }
-    for(int i = 'a'; i <= 'z'; i++) {
-        string res;
-        dfs(res, i);
+    FloydWarshall();
+
+    vector<string> answers;
+    for(int i = 'A'; i <= 'z'; i++) {
+        if(i > 90 && i < 97) continue;
+        for(int j = 'A'; j <= 'z'; j++) {
+            if(j > 90 && j < 97) continue;
+            if(i == j) continue;
+            if (edges[i][j]) {
+                string str;
+                str.push_back(char(i));
+                str += " => ";
+                str.push_back(char(j));
+                answers.push_back(str);
+            }
+        }
     }
 
-    for(auto x : answer) {
-        cout << x.first << " => " << x.second << '\n';
+    cout << answers.size() << '\n';
+    for(const auto &ans : answers) {
+        cout << ans << '\n';
     }
-
-//    sort(answers.begin(), answers.end());
-//    answers.erase(unique(answers.begin(), answers.end()), answers.end());
-//
-//    cout << answers.size() << '\n';
-//    for(auto x : answers) {
-//        cout << x.first << " => " << x.second << '\n';
-//    }
 }
