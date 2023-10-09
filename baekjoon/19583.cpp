@@ -15,29 +15,36 @@ int StringTimeToIntTime(const string &strTime) {
 }
 
 int main() {
-    unordered_map<string,int> mp;
+    unordered_map<string,int> mp1, mp2;
     string S, E, Q;
     cin >> S >> E >> Q;
     int s = StringTimeToIntTime(S);
     int e = StringTimeToIntTime(E);
     int q = StringTimeToIntTime(Q);
 
-    string time , name;
-    while (cin >> time >> name) {
+    while (true) {
+        string time , name;
         int intTime;
+        cin >> time;
+        if(cin.eof()) break;
+        cin >> name;
         intTime = StringTimeToIntTime(time);
 
-        if (intTime <= s || (intTime >= e && intTime <= q)) {
-            mp[name]++;
+        if(intTime >= 0 && intTime <= s) {
+            mp1[name]++;
+        }
+        if (intTime >= e && intTime <= q) {
+            mp2[name]++;
         }
     }
 
     int answer = 0;
-    for (const auto &item: mp) {
-        if(item.second >= 2) {
+    for (const auto &item: mp1) {
+        if(mp2[item.first] > 0) {
             answer++;
         }
     }
 
+    cout << answer;
 
 }
